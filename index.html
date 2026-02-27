@@ -626,6 +626,7 @@
             <div class="btn-container" style="margin-top: 30px;">
                 <button class="btn btn-secondary" onclick="startOver()">🔄 ดูดวงอีกครั้ง</button>
                 <button class="btn" onclick="downloadReading()">📄 บันทึกการอ่าน</button>
+                <button class="btn" onclick="shareReading()" style="background: linear-gradient(135deg, #e74c3c, #f39c12);">📤 แชร์ผลการอ่าน</button>
             </div>
         </div>
     </div>
@@ -1027,6 +1028,147 @@
             setTimeout(() => {
                 printWindow.print();
             }, 250);
+        }
+
+        function shareReading() {
+            // Get the reading text (clean version without HTML)
+            const chatMessages = document.getElementById('chatMessages');
+            const readingElements = chatMessages.querySelectorAll('.reading-text');
+
+            let readingText = '';
+            readingElements.forEach(el => {
+                readingText += el.innerText + '\n\n';
+            });
+
+            // Create formatted share text
+            const shareText = `🔮✨ The Wizard of Destiny Tales ✨🔮\n\n${readingText}\n━━━━━━━━━━━━━━━━\n💫 ต้องการคำทำนายของคุณเอง?\n🌟 เข้าชมที่: wizard-interactive-v2.vercel.app`;
+
+            // Check if Web Share API is available (mobile devices)
+            if (navigator.share) {
+                navigator.share({
+                    title: '🔮 The Wizard of Destiny Tales',
+                    text: shareText,
+                    url: 'https://wizard-interactive-v2.vercel.app'
+                }).then(() => {
+                    console.log('Shared successfully');
+                }).catch((error) => {
+                    console.log('Share failed:', error);
+                    fallbackShare(shareText);
+                });
+            } else {
+                // Fallback for desktop - show share options dialog
+                fallbackShare(shareText);
+            }
+        }
+
+        function fallbackShare(shareText) {
+            // Create modal for share options
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+            `;
+
+            modal.innerHTML = `
+                <div style="
+                    background: linear-gradient(135deg, #1a1f3a 0%, #2d1b4e 100%);
+                    padding: 30px;
+                    border-radius: 20px;
+                    max-width: 500px;
+                    width: 90%;
+                    box-shadow: 0 0 40px rgba(155, 89, 182, 0.5);
+                ">
+                    <h2 style="color: #9b59b6; margin: 0 0 20px 0; text-align: center;">📤 แชร์ผลการอ่าน</h2>
+
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; margin-bottom: 20px; max-height: 200px; overflow-y: auto;">
+                        <p style="color: #fff; font-size: 14px; margin: 0; white-space: pre-wrap; line-height: 1.6;">${shareText}</p>
+                    </div>
+
+                    <div style="display: grid; gap: 10px; margin-bottom: 20px;">
+                        <button onclick="copyToClipboard()" style="
+                            background: linear-gradient(135deg, #3498db, #2980b9);
+                            color: white;
+                            border: none;
+                            padding: 15px;
+                            border-radius: 10px;
+                            font-size: 16px;
+                            cursor: pointer;
+                            font-family: 'Sarabun', sans-serif;
+                        ">📋 คัดลอกข้อความ</button>
+
+                        <a href="https://social-plugins.line.me/lineit/share?url=https://wizard-interactive-v2.vercel.app" target="_blank" style="
+                            background: linear-gradient(135deg, #00c300, #00b300);
+                            color: white;
+                            text-decoration: none;
+                            padding: 15px;
+                            border-radius: 10px;
+                            font-size: 16px;
+                            text-align: center;
+                            font-family: 'Sarabun', sans-serif;
+                        ">💚 แชร์ผ่าน LINE</a>
+
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=https://wizard-interactive-v2.vercel.app" target="_blank" style="
+                            background: linear-gradient(135deg, #3b5998, #2d4373);
+                            color: white;
+                            text-decoration: none;
+                            padding: 15px;
+                            border-radius: 10px;
+                            font-size: 16px;
+                            text-align: center;
+                            font-family: 'Sarabun', sans-serif;
+                        ">📘 แชร์ผ่าน Facebook</a>
+
+                        <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent('🔮 ผลการทำนายจาก The Wizard of Destiny Tales ✨')}&url=https://wizard-interactive-v2.vercel.app" target="_blank" style="
+                            background: linear-gradient(135deg, #1da1f2, #0d8bd9);
+                            color: white;
+                            text-decoration: none;
+                            padding: 15px;
+                            border-radius: 10px;
+                            font-size: 16px;
+                            text-align: center;
+                            font-family: 'Sarabun', sans-serif;
+                        ">🐦 แชร์ผ่าน Twitter</a>
+                    </div>
+
+                    <button onclick="this.parentElement.parentElement.remove()" style="
+                        background: rgba(255,255,255,0.1);
+                        color: white;
+                        border: 2px solid rgba(255,255,255,0.3);
+                        padding: 12px;
+                        border-radius: 10px;
+                        font-size: 16px;
+                        cursor: pointer;
+                        width: 100%;
+                        font-family: 'Sarabun', sans-serif;
+                    ">ปิด</button>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            // Copy to clipboard function
+            window.copyToClipboard = function() {
+                navigator.clipboard.writeText(shareText).then(() => {
+                    alert('✅ คัดลอกข้อความเรียบร้อย!\n\nสามารถนำไปแปะใน Line, Facebook หรือแอปอื่นๆ ได้เลย');
+                }).catch(() => {
+                    // Fallback for older browsers
+                    const textarea = document.createElement('textarea');
+                    textarea.value = shareText;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textarea);
+                    alert('✅ คัดลอกข้อความเรียบร้อย!');
+                });
+            };
         }
 
         function startOver() {
