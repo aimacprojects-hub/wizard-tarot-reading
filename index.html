@@ -788,24 +788,113 @@
                 <span class="loading-spinner">🌟</span>
             `);
 
-            // Call API for initial reading
-            try {
-                const reading = await generateReading(selectedTopic, userQuestion, selectedPackage.type, false);
+            // Call API for initial reading with retry mechanism
+            let retryCount = 0;
+            const maxRetries = 3;
+            let reading = null;
 
-                // Remove loading message
-                const chatDiv = document.getElementById('chatMessages');
-                chatDiv.innerHTML = '';
+            while (retryCount < maxRetries && !reading) {
+                try {
+                    reading = await generateReading(selectedTopic, userQuestion, selectedPackage.type, false);
 
-                // Add actual reading
-                addWizardMessage(reading);
-            } catch (error) {
-                console.error('Error generating reading:', error);
-                const chatDiv = document.getElementById('chatMessages');
-                chatDiv.innerHTML = '';
-                addWizardMessage('😔 ขออภัย เกิดข้อผิดพลาดในการอ่านไพ่ กรุณาลองใหม่อีกครั้ง');
+                    // Success! Remove loading message
+                    const chatDiv = document.getElementById('chatMessages');
+                    chatDiv.innerHTML = '';
+
+                    // Add actual reading
+                    addWizardMessage(reading);
+                } catch (error) {
+                    retryCount++;
+                    console.error(`Error generating reading (attempt ${retryCount}/${maxRetries}):`, error);
+
+                    if (retryCount < maxRetries) {
+                        // Update loading message to show retry
+                        const chatDiv = document.getElementById('chatMessages');
+                        chatDiv.innerHTML = '';
+                        addWizardMessage(`
+                            <span class="loading-float">🔮</span>
+                            <span class="loading-animation">พ่อมดกำลังสานดวงและเปิดไพ่ของคุณ...</span>
+                            <br>
+                            <em style="color: #c9b3d4;">กำลังเชื่อมต่อกับดวงดาว... (ครั้งที่ ${retryCount + 1})</em>
+                            <span class="loading-spinner">✨</span>
+                            <span class="loading-animation">💫</span>
+                            <span class="loading-spinner">🌟</span>
+                        `);
+                        // Wait 2 seconds before retrying
+                        await new Promise(resolve => setTimeout(resolve, 2000));
+                    } else {
+                        // All retries failed - show error with retry button
+                        const chatDiv = document.getElementById('chatMessages');
+                        chatDiv.innerHTML = '';
+                        addWizardMessage(`
+                            😔 ขออภัย เกิดข้อผิดพลาดในการเชื่อมต่อกับดวงดาว
+                            <br><br>
+                            <strong style="color: #f39c12;">💡 แต่ไม่ต้องกังวล!</strong>
+                            <br>
+                            คำถามของคุณถูกบันทึกไว้แล้ว กรุณากดปุ่มด้านล่างเพื่อลองอีกครั้ง
+                            <br><br>
+                            <button onclick="retryReading()" style="
+                                background: linear-gradient(135deg, #9b59b6, #8e44ad);
+                                color: white;
+                                border: none;
+                                padding: 15px 30px;
+                                border-radius: 25px;
+                                font-size: 18px;
+                                cursor: pointer;
+                                font-family: 'Sarabun', sans-serif;
+                                box-shadow: 0 4px 15px rgba(155, 89, 182, 0.3);
+                            ">🔄 ลองอีกครั้ง</button>
+                        `);
+                    }
+                }
             }
 
             document.getElementById('followUpCount').textContent = `คำถามติดตามเหลือ: ${followUpCount}`;
+        }
+
+        async function retryReading() {
+            // Clear chat and retry
+            const chatDiv = document.getElementById('chatMessages');
+            chatDiv.innerHTML = '';
+
+            // Show loading message
+            addWizardMessage(`
+                <span class="loading-float">🔮</span>
+                <span class="loading-animation">พ่อมดกำลังสานดวงและเปิดไพ่ของคุณ...</span>
+                <br>
+                <em style="color: #c9b3d4;">กรุณารอสักครู่</em>
+                <span class="loading-spinner">✨</span>
+                <span class="loading-animation">💫</span>
+                <span class="loading-spinner">🌟</span>
+            `);
+
+            // Try again
+            try {
+                const reading = await generateReading(selectedTopic, userQuestion, selectedPackage.type, false);
+                chatDiv.innerHTML = '';
+                addWizardMessage(reading);
+            } catch (error) {
+                console.error('Retry failed:', error);
+                chatDiv.innerHTML = '';
+                addWizardMessage(`
+                    😔 ยังคงเกิดข้อผิดพลาด
+                    <br><br>
+                    กรุณาติดต่อเราผ่านทาง Line หรือ Facebook
+                    <br>
+                    เราจะดูแลให้คุณได้รับการอ่านไพ่ที่คุณจ่ายเงินไปแล้ว
+                    <br><br>
+                    <button onclick="retryReading()" style="
+                        background: linear-gradient(135deg, #9b59b6, #8e44ad);
+                        color: white;
+                        border: none;
+                        padding: 15px 30px;
+                        border-radius: 25px;
+                        font-size: 18px;
+                        cursor: pointer;
+                        font-family: 'Sarabun', sans-serif;
+                    ">🔄 ลองอีกครั้ง</button>
+                `);
+            }
         }
 
         async function generateReading(topic, question, packageType, isFollowUp = false) {
