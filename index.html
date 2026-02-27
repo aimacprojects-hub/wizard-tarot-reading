@@ -1110,8 +1110,8 @@
             followUpCount--;
             document.getElementById('followUpCount').textContent = `คำถามติดตามเหลือ: ${followUpCount}`;
 
-            // Show loading
-            addWizardMessage('💫 พ่อมดกำลังมองลึกเข้าไปในไพ่...');
+            // Show loading (don't save to history)
+            addWizardMessage('💫 พ่อมดกำลังมองลึกเข้าไปในไพ่...', false);
 
             try {
                 const response = await generateReading(selectedTopic, question, selectedPackage.type, true);
@@ -1122,6 +1122,7 @@
 
                 // Add real response
                 addWizardMessage(response);
+                saveSession(); // Save after follow-up answer
 
                 if (followUpCount === 0) {
                     setTimeout(() => {
@@ -1135,6 +1136,7 @@
                             ขอให้โชคดีในเส้นทางชีวิตของคุณ! 💫✨
                         `);
                         document.getElementById('followUpInput').disabled = true;
+                        saveSession(); // Save when all follow-ups used
                     }, 1500);
                 }
             } catch (error) {
