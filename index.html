@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Wizard of Destiny Tales - Interactive Tarot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #2d1b4e 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .magic-bg {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(2px 2px at 20% 30%, white, transparent),
+                        radial-gradient(2px 2px at 60% 70%, white, transparent),
+                        radial-gradient(1px 1px at 50% 50%, white, transparent);
+            background-size: 200% 200%;
+            animation: sparkle 8s ease-in-out infinite;
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .logo {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 36px;
+            background: linear-gradient(135deg, #9b59b6, #e74c3c, #f39c12);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            color: #c9b3d4;
+            font-size: 18px;
+            font-style: italic;
+        }
+
+        /* Step Progress */
+        .progress {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 30px 0;
+        }
+
+        .progress-step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(155, 89, 182, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            border: 2px solid rgba(155, 89, 182, 0.3);
+        }
+
+        .progress-step.active {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            border-color: #9b59b6;
+            box-shadow: 0 0 20px rgba(155, 89, 182, 0.6);
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Topic Selection */
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .topic-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(155, 89, 182, 0.3);
+            border-radius: 15px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-5px);
+            border-color: #9b59b6;
+            box-shadow: 0 10px 30px rgba(155, 89, 182, 0.4);
+        }
+
+        .topic-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .topic-title {
+            font-size: 22px;
+            color: #9b59b6;
+            margin-bottom: 8px;
+        }
+
+        /* Question Input */
+        .question-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(155, 89, 182, 0.3);
+            border-radius: 15px;
+            padding: 40px 30px;
+            margin: 30px 0;
+        }
+
+        .question-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid rgba(155, 89, 182, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 18px;
+            font-family: 'Sarabun', sans-serif;
+            margin-bottom: 20px;
+        }
+
+        .question-input:focus {
+            outline: none;
+            border-color: #9b59b6;
+        }
+
+        .suggestions {
+            display: grid;
+            gap: 10px;
+        }
+
+        .suggestion-btn {
+            background: rgba(155, 89, 182, 0.2);
+            border: 1px solid rgba(155, 89, 182, 0.4);
+            color: #c9b3d4;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.3s;
+        }
+
+        .suggestion-btn:hover {
+            background: rgba(155, 89, 182, 0.4);
+            color: #fff;
+        }
+
+        /* Package Selection */
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .package-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(155, 89, 182, 0.3);
+            border-radius: 15px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .package-card:hover {
+            transform: translateY(-5px);
+            border-color: #9b59b6;
+            box-shadow: 0 10px 30px rgba(155, 89, 182, 0.4);
+        }
+
+        .package-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .package-title {
+            font-size: 20px;
+            color: #9b59b6;
+            margin-bottom: 10px;
+        }
+
+        .package-price {
+            font-size: 32px;
+            background: linear-gradient(135deg, #9b59b6, #e74c3c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .package-features {
+            font-size: 14px;
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+
+        /* Chat Interface */
+        .chat-container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(155, 89, 182, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 30px 0;
+            min-height: 400px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .chat-message {
+            margin-bottom: 20px;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .message-user {
+            background: rgba(155, 89, 182, 0.3);
+            padding: 12px 16px;
+            border-radius: 15px 15px 5px 15px;
+            margin-left: 20%;
+            text-align: right;
+        }
+
+        .message-wizard {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px 20px;
+            border-radius: 15px 15px 15px 5px;
+            margin-right: 20%;
+        }
+
+        .wizard-avatar {
+            display: inline-block;
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .follow-up-input {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .follow-up-input input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid rgba(155, 89, 182, 0.3);
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        .follow-up-count {
+            text-align: center;
+            color: #9b59b6;
+            margin: 15px 0;
+            font-size: 16px;
+        }
+
+        /* Buttons */
+        .btn {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            color: white;
+            padding: 15px 35px;
+            font-size: 18px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(155, 89, 182, 0.4);
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(155, 89, 182, 0.6);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #9b59b6;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        /* Card Drawing */
+        .card-deck {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+
+        .tarot-card {
+            width: 100px;
+            height: 160px;
+            background: linear-gradient(135deg, #2d1b4e, #1a1f3a);
+            border: 3px solid #9b59b6;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tarot-card:hover {
+            transform: translateY(-15px) scale(1.05);
+        }
+
+        .tarot-card.selected {
+            opacity: 0.3;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 28px; }
+            .topics-grid { grid-template-columns: 1fr; }
+            .packages-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="magic-bg"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo">🔮</div>
+            <h1>The Wizard of Destiny Tales</h1>
+            <p class="tagline">ที่ซึ่งเวทมนตร์พบกับโชคชะตา</p>
+        </header>
+
+        <div class="progress">
+            <div class="progress-step active" id="step1">1</div>
+            <div class="progress-step" id="step2">2</div>
+            <div class="progress-step" id="step3">3</div>
+            <div class="progress-step" id="step4">4</div>
+            <div class="progress-step" id="step5">5</div>
+        </div>
+
+        <!-- Screen 1: Topic Selection -->
+        <div class="screen active" id="topicScreen">
+            <h2 style="text-align: center; margin-bottom: 20px; color: #9b59b6;">เลือกหัวข้อที่คุณต้องการถาม</h2>
+            <div class="topics-grid">
+                <div class="topic-card" onclick="selectTopic('love', '💖 ความรักและความสัมพันธ์')">
+                    <div class="topic-icon">💖</div>
+                    <div class="topic-title">ความรักและความสัมพันธ์</div>
+                    <p style="color: #ccc; font-size: 14px;">คำถามเกี่ยวกับความรัก คู่ครอง และความสัมพันธ์</p>
+                </div>
+                <div class="topic-card" onclick="selectTopic('career', '💼 การงานและอาชีพ')">
+                    <div class="topic-icon">💼</div>
+                    <div class="topic-title">การงานและอาชีพ</div>
+                    <p style="color: #ccc; font-size: 14px;">คำถามเกี่ยวกับงาน อาชีพ และความก้าวหน้า</p>
+                </div>
+                <div class="topic-card" onclick="selectTopic('money', '💰 การเงินและความมั่งคั่ง')">
+                    <div class="topic-icon">💰</div>
+                    <div class="topic-title">การเงินและความมั่งคั่ง</div>
+                    <p style="color: #ccc; font-size: 14px;">คำถามเกี่ยวกับเงิน ธุรกิจ และความร่ำรวย</p>
+                </div>
+                <div class="topic-card" onclick="selectTopic('health', '🏥 สุขภาพและความเป็นอยู่')">
+                    <div class="topic-icon">🏥</div>
+                    <div class="topic-title">สุขภาพและความเป็นอยู่</div>
+                    <p style="color: #ccc; font-size: 14px;">คำถามเกี่ยวกับสุขภาพ พลังงาน และความสมดุล</p>
+                </div>
+                <div class="topic-card" onclick="selectTopic('family', '👨‍👩‍👧 ครอบครัวและเพื่อน')">
+                    <div class="topic-icon">👨‍👩‍👧</div>
+                    <div class="topic-title">ครอบครัวและเพื่อน</div>
+                    <p style="color: #ccc; font-size: 14px;">คำถามเกี่ยวกับความสัมพันธ์กับคนใกล้ชิด</p>
+                </div>
+                <div class="topic-card" onclick="selectTopic('spiritual', '🌟 จุดประสงค์และจิตวิญญาณ')">
+                    <div class="topic-icon">🌟</div>
+                    <div class="topic-title">จุดประสงค์และจิตวิญญาณ</div>
+                    <p style="color: #ccc; font-size: 14px;">คำถามเกี่ยวกับการเติบโตและความหมายของชีวิต</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Screen 2: Question Input -->
+        <div class="screen" id="questionScreen">
+            <h2 style="text-align: center; margin-bottom: 20px; color: #9b59b6;">ถามคำถามของคุณ</h2>
+            <div class="question-section">
+                <p style="color: #c9b3d4; margin-bottom: 15px; text-align: center;">
+                    <span id="selectedTopicDisplay"></span>
+                </p>
+                <p style="color: #f39c12; background: rgba(243, 156, 18, 0.1); border-left: 3px solid #f39c12; padding: 12px 15px; border-radius: 8px; font-size: 14px; margin-bottom: 20px; line-height: 1.6;">
+                    ✨ <strong>เคล็ดลับสำคัญ:</strong> ยิ่งคำถามของคุณชัดเจนและตรงประเด็นเท่าไหร่ คำทำนายจากไพ่ก็จะแม่นยำและตอบโจทย์มากขึ้นเท่านั้น พ่อมดจะสามารถมองเห็นเส้นทางและคำตอบที่เหมาะกับคุณได้ชัดเจนยิ่งขึ้น 🔮
+                </p>
+                <textarea class="question-input" id="questionInput" rows="3" placeholder="พิมพ์คำถามของคุณที่นี่..."></textarea>
+                <p style="color: #aaa; font-size: 14px; margin-bottom: 15px;">💡 ตัวอย่างคำถาม:</p>
+                <div class="suggestions" id="suggestions"></div>
+
+                <!-- Personalization Section -->
+                <div style="margin-top: 30px; padding-top: 25px; border-top: 1px solid rgba(155, 89, 182, 0.3);">
+                    <p style="color: #9b59b6; font-size: 16px; margin-bottom: 20px; text-align: center;">
+                        ✨ เพื่อให้คำทำนายเหมาะกับคุณมากขึ้น (ไม่บังคับ)
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                        <div>
+                            <label style="color: #c9b3d4; font-size: 14px; display: block; margin-bottom: 8px;">👤 ช่วงอายุ</label>
+                            <select id="ageRange" class="question-input" style="padding: 10px; margin: 0;">
+                                <option value="">ไม่ระบุ</option>
+                                <option value="18-25">18-25 ปี</option>
+                                <option value="26-35">26-35 ปี</option>
+                                <option value="36-45">36-45 ปี</option>
+                                <option value="46-55">46-55 ปี</option>
+                                <option value="56+">56+ ปี</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label style="color: #c9b3d4; font-size: 14px; display: block; margin-bottom: 8px;">⚧️ เพศ</label>
+                            <select id="gender" class="question-input" style="padding: 10px; margin: 0;">
+                                <option value="">ไม่ระบุ</option>
+                                <option value="male">ชาย</option>
+                                <option value="female">หญิง</option>
+                                <option value="other">อื่นๆ</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label style="color: #c9b3d4; font-size: 14px; display: block; margin-bottom: 8px;">💭 ตอนนี้คุณรู้สึกอย่างไร?</label>
+                        <select id="emotionalState" class="question-input" style="padding: 10px; margin: 0;">
+                            <option value="">ไม่ระบุ</option>
+                            <option value="hopeful">มีความหวัง ✨</option>
+                            <option value="worried">กังวล 😟</option>
+                            <option value="confused">สับสน 🤔</option>
+                            <option value="happy">มีความสุข 😊</option>
+                            <option value="sad">เศร้า 😢</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-container">
+                <button class="btn btn-secondary" onclick="goBack('topicScreen')">← กลับ</button>
+                <button class="btn" onclick="goToPackages()">ถัดไป →</button>
+            </div>
+        </div>
+
+        <!-- Screen 3: Package Selection -->
+        <div class="screen" id="packageScreen">
+            <h2 style="text-align: center; margin-bottom: 20px; color: #9b59b6;">เลือกแพ็คเกจของคุณ</h2>
+            <div class="packages-grid">
+                <div class="package-card" onclick="selectPackage('quick', 199, 1, 1)">
+                    <div class="package-icon">✨</div>
+                    <div class="package-title">ไพ่ดวงชะตา</div>
+                    <div class="package-price">฿199</div>
+                    <div class="package-features">
+                        • ไพ่ 1 ใบ<br>
+                        • คำถามติดตาม 1 ข้อ<br>
+                        • คำตอบรวดเร็วและชัดเจน
+                    </div>
+                </div>
+                <div class="package-card" onclick="selectPackage('deep', 399, 3, 2)">
+                    <div class="package-icon">🌟</div>
+                    <div class="package-title">การอ่านลึกซึ้ง</div>
+                    <div class="package-price">฿399</div>
+                    <div class="package-features">
+                        • ไพ่ 3 ใบ (อดีต-ปัจจุบัน-อนาคต)<br>
+                        • คำถามติดตาม 2 ข้อ<br>
+                        • การวิเคราะห์เชิงลึก
+                    </div>
+                </div>
+                <div class="package-card" onclick="selectPackage('complete', 799, 10, 3)">
+                    <div class="package-icon">⚡</div>
+                    <div class="package-title">วิสัยทัศน์สมบูรณ์</div>
+                    <div class="package-price">฿799</div>
+                    <div class="package-features">
+                        • ไพ่ 10 ใบ (Celtic Cross)<br>
+                        • คำถามติดตาม 3 ข้อ<br>
+                        • การอ่านที่สมบูรณ์แบบ
+                    </div>
+                </div>
+            </div>
+            <div class="btn-container">
+                <button class="btn btn-secondary" onclick="goBack('questionScreen')">← กลับ</button>
+            </div>
+        </div>
+
+        <!-- Screen 4: Card Drawing -->
+        <div class="screen" id="cardScreen">
+            <h2 style="text-align: center; margin-bottom: 20px; color: #9b59b6;">เลือกไพ่ของคุณ</h2>
+            <p style="text-align: center; color: #c9b3d4; margin-bottom: 20px;">
+                จับสั่นไพ่และเลือกใบที่เรียกหาคุณ...
+            </p>
+            <div class="btn-container">
+                <button class="btn btn-secondary" onclick="shuffleCards()">🔀 สับไพ่</button>
+            </div>
+            <div class="card-deck" id="cardDeck"></div>
+            <p style="text-align: center; color: #ddd; margin: 20px 0;">
+                เลือกแล้ว: <span id="selectedCount">0</span> / <span id="totalNeeded">1</span>
+            </p>
+            <div class="btn-container">
+                <button class="btn" id="revealBtn" onclick="revealReading()" disabled>✨ เปิดเผยคำทำนาย</button>
+            </div>
+        </div>
+
+        <!-- Screen 5: Reading & Chat -->
+        <div class="screen" id="chatScreen">
+            <h2 style="text-align: center; margin-bottom: 20px; color: #9b59b6;">นิทานดวงชะตาของคุณ</h2>
+            <div class="chat-container" id="chatMessages"></div>
+
+            <p style="color: #f39c12; background: rgba(243, 156, 18, 0.1); border-left: 3px solid #f39c12; padding: 12px 15px; border-radius: 8px; font-size: 14px; margin: 20px 0; line-height: 1.6;">
+                💬 <strong>คำถามติดตามคืออะไร?</strong><br>
+                ใช้คำถามติดตามเพื่อขอคำชี้แจงเพิ่มเติมหรือเจาะลึกในประเด็นเดียวกันจากไพ่ชุดเดิมที่เปิดไว้แล้ว พ่อมดจะตีความไพ่เหล่านั้นในมุมมองที่ลึกซึ้งยิ่งขึ้น
+            </p>
+
+            <div class="follow-up-count" id="followUpCount">คำถามติดตามเหลือ: 1</div>
+            <div class="follow-up-input">
+                <input type="text" id="followUpInput" placeholder="พิมพ์คำถามติดตาม...">
+                <button class="btn" onclick="askFollowUp()">ส่ง</button>
+            </div>
+            <div class="btn-container" style="margin-top: 30px;">
+                <button class="btn btn-secondary" onclick="startOver()">🔄 ดูดวงอีกครั้ง</button>
+                <button class="btn" onclick="downloadReading()">📄 บันทึกการอ่าน</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentScreen = 'topicScreen';
+        let selectedTopic = '';
+        let selectedTopicName = '';
+        let userQuestion = '';
+        let selectedPackage = {};
+        let followUpCount = 0;
+        let selectedCards = [];
+        let conversationHistory = [];
+        let userProfile = {
+            ageRange: '',
+            gender: '',
+            emotionalState: ''
+        };
+
+        const suggestions = {
+            love: [
+                'ฉันจะเจอคนที่ใช่เมื่อไหร่',
+                'ความสัมพันธ์ปัจจุบันของฉันเป็นอย่างไร',
+                'จะมีความรักใหม่เข้ามาในชีวิตฉันไหม',
+                'ฉันควรยังคงอยู่หรือควรจากไป'
+            ],
+            career: [
+                'ควรเปลี่ยนงานไหม',
+                'การงานของฉันจะก้าวหน้าไหม',
+                'โอกาสใหม่กำลังมาหาฉันไหม',
+                'อาชีพไหนเหมาะกับฉัน'
+            ],
+            money: [
+                'การเงินของฉันจะดีขึ้นไหม',
+                'ธุรกิจนี้จะสำเร็จไหม',
+                'ควรลงทุนในโอกาสนี้ไหม',
+                'จะมีเงินเข้ามาหาฉันไหม'
+            ],
+            health: [
+                'สุขภาพของฉันจะเป็นอย่างไร',
+                'อะไรจะช่วยให้ฉันมีพลังงานดีขึ้น',
+                'ควรเปลี่ยนวิถีชีวิตอย่างไร',
+                'จะฟื้นตัวเร็วไหม'
+            ],
+            family: [
+                'ความสัมพันธ์ในครอบครัวจะดีขึ้นไหม',
+                'จะแก้ไขปัญหากับครอบครัวได้อย่างไร',
+                'ครอบครัวจะเข้าใจฉันไหม',
+                'มิตรภาพนี้จะยั่งยืนไหม'
+            ],
+            spiritual: [
+                'จุดประสงค์ของชีวิตฉันคืออะไร',
+                'ฉันกำลังเดินบนเส้นทางที่ถูกต้องไหม',
+                'อะไรจะนำพาฉันไปสู่ความสุข',
+                'จะพัฒนาจิตวิญญาณได้อย่างไร'
+            ]
+        };
+
+        function selectTopic(topic, name) {
+            selectedTopic = topic;
+            selectedTopicName = name;
+            document.getElementById('selectedTopicDisplay').textContent = name;
+
+            const suggestionsDiv = document.getElementById('suggestions');
+            suggestionsDiv.innerHTML = '';
+            suggestions[topic].forEach(s => {
+                const btn = document.createElement('button');
+                btn.className = 'suggestion-btn';
+                btn.textContent = s;
+                btn.onclick = () => {
+                    document.getElementById('questionInput').value = s;
+                };
+                suggestionsDiv.appendChild(btn);
+            });
+
+            goToScreen('questionScreen');
+            updateProgress(2);
+        }
+
+        function goToPackages() {
+            userQuestion = document.getElementById('questionInput').value;
+            if (!userQuestion.trim()) {
+                alert('กรุณาใส่คำถามของคุณ');
+                return;
+            }
+
+            // Capture personalization data
+            userProfile.ageRange = document.getElementById('ageRange').value;
+            userProfile.gender = document.getElementById('gender').value;
+            userProfile.emotionalState = document.getElementById('emotionalState').value;
+
+            goToScreen('packageScreen');
+            updateProgress(3);
+        }
+
+        function selectPackage(type, price, cards, followUps) {
+            selectedPackage = { type, price, cards, followUps };
+            followUpCount = followUps;
+
+            goToScreen('cardScreen');
+            updateProgress(4);
+            initializeCards(cards);
+        }
+
+        function initializeCards(count) {
+            const deck = document.getElementById('cardDeck');
+            deck.innerHTML = '';
+            document.getElementById('totalNeeded').textContent = count;
+            selectedCards = [];
+
+            for (let i = 0; i < 10; i++) {
+                const card = document.createElement('div');
+                card.className = 'tarot-card';
+                card.innerHTML = '🂠';
+                card.onclick = () => selectCard(i, count);
+                deck.appendChild(card);
+            }
+        }
+
+        function shuffleCards() {
+            const cards = document.querySelectorAll('.tarot-card');
+            cards.forEach(card => {
+                card.style.transform = 'rotateY(180deg)';
+                setTimeout(() => card.style.transform = '', 600);
+            });
+        }
+
+        function selectCard(index, needed) {
+            if (selectedCards.length >= needed) return;
+
+            const cards = document.querySelectorAll('.tarot-card');
+            const card = cards[index];
+            if (card.classList.contains('selected')) return;
+
+            card.classList.add('selected');
+            selectedCards.push(index);
+
+            document.getElementById('selectedCount').textContent = selectedCards.length;
+
+            if (selectedCards.length === needed) {
+                document.getElementById('revealBtn').disabled = false;
+            }
+        }
+
+        async function revealReading() {
+            goToScreen('chatScreen');
+            updateProgress(5);
+
+            conversationHistory = [];
+
+            // Show loading message
+            addWizardMessage('🔮 พ่อมดกำลังสานดวงและเปิดไพ่ของคุณ...<br><em style="color: #c9b3d4;">กรุณารอสักครู่ ✨</em>');
+
+            // Call API for initial reading
+            try {
+                const reading = await generateReading(selectedTopic, userQuestion, selectedPackage.type, false);
+
+                // Remove loading message
+                const chatDiv = document.getElementById('chatMessages');
+                chatDiv.innerHTML = '';
+
+                // Add actual reading
+                addWizardMessage(reading);
+            } catch (error) {
+                console.error('Error generating reading:', error);
+                const chatDiv = document.getElementById('chatMessages');
+                chatDiv.innerHTML = '';
+                addWizardMessage('😔 ขออภัย เกิดข้อผิดพลาดในการอ่านไพ่ กรุณาลองใหม่อีกครั้ง');
+            }
+
+            document.getElementById('followUpCount').textContent = `คำถามติดตามเหลือ: ${followUpCount}`;
+        }
+
+        async function generateReading(topic, question, packageType, isFollowUp = false) {
+            try {
+                const response = await fetch('/api/tarot-reading', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        topic: selectedTopic,
+                        topicName: selectedTopicName,
+                        question: question,
+                        packageType: packageType,
+                        cardCount: selectedPackage.cards,
+                        userProfile: userProfile,
+                        isFollowUp: isFollowUp,
+                        conversationHistory: conversationHistory
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                return data.reading;
+            } catch (error) {
+                console.error('Error calling API:', error);
+                throw error;
+            }
+        }
+
+        function addWizardMessage(text) {
+            const chatDiv = document.getElementById('chatMessages');
+            const msg = document.createElement('div');
+            msg.className = 'chat-message';
+            msg.innerHTML = `
+                <div class="message-wizard">
+                    <span class="wizard-avatar">🧙‍♂️</span>
+                    <div style="display: inline-block; width: 90%;">${text}</div>
+                </div>
+            `;
+            chatDiv.appendChild(msg);
+            chatDiv.scrollTop = chatDiv.scrollHeight;
+
+            conversationHistory.push({ role: 'wizard', text });
+        }
+
+        function addUserMessage(text) {
+            const chatDiv = document.getElementById('chatMessages');
+            const msg = document.createElement('div');
+            msg.className = 'chat-message';
+            msg.innerHTML = `<div class="message-user">${text}</div>`;
+            chatDiv.appendChild(msg);
+            chatDiv.scrollTop = chatDiv.scrollHeight;
+
+            conversationHistory.push({ role: 'user', text });
+        }
+
+        async function askFollowUp() {
+            if (followUpCount <= 0) {
+                alert('คุณใช้คำถามติดตามหมดแล้ว 😊\n\nสามารถซื้อแพ็คเกจใหม่เพื่อถามเพิ่มได้นะคะ!');
+                return;
+            }
+
+            const input = document.getElementById('followUpInput');
+            const question = input.value.trim();
+
+            if (!question) return;
+
+            addUserMessage(question);
+            input.value = '';
+
+            followUpCount--;
+            document.getElementById('followUpCount').textContent = `คำถามติดตามเหลือ: ${followUpCount}`;
+
+            // Show loading
+            addWizardMessage('💫 พ่อมดกำลังมองลึกเข้าไปในไพ่...');
+
+            try {
+                const response = await generateReading(selectedTopic, question, selectedPackage.type, true);
+
+                // Remove loading message
+                const messages = document.querySelectorAll('.chat-message');
+                messages[messages.length - 1].remove();
+
+                // Add real response
+                addWizardMessage(response);
+
+                if (followUpCount === 0) {
+                    setTimeout(() => {
+                        addWizardMessage(`
+                            คุณได้ใช้คำถามติดตามครบแล้ว! 🌟
+
+                            หากต้องการเจาะลึกมากขึ้น สามารถ:
+                            • ซื้อแพ็คเกจใหม่ เพื่อถามคำถามใหม่
+                            • บันทึกการอ่านนี้เพื่ออ้างอิงในอนาคต
+
+                            ขอให้โชคดีในเส้นทางชีวิตของคุณ! 💫✨
+                        `);
+                        document.getElementById('followUpInput').disabled = true;
+                    }, 1500);
+                }
+            } catch (error) {
+                console.error('Error generating follow-up:', error);
+                const messages = document.querySelectorAll('.chat-message');
+                messages[messages.length - 1].remove();
+                addWizardMessage('😔 ขออภัย เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
+                followUpCount++; // Restore the count since it failed
+                document.getElementById('followUpCount').textContent = `คำถามติดตามเหลือ: ${followUpCount}`;
+            }
+        }
+
+        function downloadReading() {
+            alert('📄 ฟีเจอร์บันทึก PDF กำลังพัฒนา!\n\nในเร็วๆ นี้คุณจะสามารถ:\n• ดาวน์โหลดการอ่านเป็น PDF\n• บันทึกลงอีเมล\n• แชร์ผ่าน Line/Facebook');
+        }
+
+        function startOver() {
+            goToScreen('topicScreen');
+            updateProgress(1);
+            selectedCards = [];
+            conversationHistory = [];
+            document.getElementById('questionInput').value = '';
+            document.getElementById('followUpInput').disabled = false;
+        }
+
+        function goToScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            currentScreen = screenId;
+            window.scrollTo(0, 0);
+        }
+
+        function goBack(screenId) {
+            goToScreen(screenId);
+            const stepMap = {
+                'topicScreen': 1,
+                'questionScreen': 2,
+                'packageScreen': 3,
+                'cardScreen': 4
+            };
+            updateProgress(stepMap[screenId]);
+        }
+
+        function updateProgress(step) {
+            for (let i = 1; i <= 5; i++) {
+                const stepEl = document.getElementById(`step${i}`);
+                if (i <= step) {
+                    stepEl.classList.add('active');
+                } else {
+                    stepEl.classList.remove('active');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
