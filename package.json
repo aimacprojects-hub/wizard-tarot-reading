@@ -1,0 +1,9 @@
+{
+  "name": "wizard-interactive-tarot",
+  "version": "2.0.0",
+  "description": "The Wizard of Destiny Tales - Interactive Tarot Reading with Reviews",
+  "private": true,
+  "dependencies": {
+    "@vercel/kv": "^1.0.1"
+  }
+}

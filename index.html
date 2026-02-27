@@ -632,7 +632,74 @@
                 <button class="btn btn-secondary" onclick="startOver()">🔄 ดูดวงอีกครั้ง</button>
                 <button class="btn" onclick="downloadReading()">📄 บันทึกการอ่าน</button>
                 <button class="btn" onclick="shareReading()" style="background: linear-gradient(135deg, #e74c3c, #f39c12);">📤 แชร์ผลการอ่าน</button>
+                <button class="btn" onclick="showReviewModal()" style="background: linear-gradient(135deg, #f39c12, #e67e22);">⭐ แสดงความคิดเห็น</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div id="reviewModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px);">
+        <div style="background: linear-gradient(135deg, #1a1f3a 0%, #2d1b4e 100%); padding: 30px; border-radius: 20px; max-width: 500px; width: 90%; box-shadow: 0 10px 50px rgba(155, 89, 182, 0.3); border: 1px solid rgba(155, 89, 182, 0.3);">
+            <h2 style="text-align: center; margin-bottom: 20px; font-size: 24px; background: linear-gradient(135deg, #9b59b6, #e74c3c, #f39c12); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                ⭐ ความคิดเห็นของคุณ
+            </h2>
+
+            <p style="text-align: center; color: #ccc; margin-bottom: 20px; font-size: 14px;">
+                ช่วยให้คะแนนและแสดงความคิดเห็นเพื่อปรับปรุงบริการครับ 🙏
+            </p>
+
+            <!-- Star Rating -->
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div style="font-size: 14px; color: #ccc; margin-bottom: 10px;">คุณประทับใจการอ่านดวงนี้แค่ไหน?</div>
+                <div id="starRating" style="font-size: 40px; cursor: pointer;">
+                    <span class="star" data-rating="1">☆</span>
+                    <span class="star" data-rating="2">☆</span>
+                    <span class="star" data-rating="3">☆</span>
+                    <span class="star" data-rating="4">☆</span>
+                    <span class="star" data-rating="5">☆</span>
+                </div>
+                <div id="ratingText" style="color: #f39c12; margin-top: 10px; font-size: 14px; min-height: 20px;"></div>
+            </div>
+
+            <!-- Feedback Text -->
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; color: #ccc; margin-bottom: 8px; font-size: 14px;">
+                    ความคิดเห็นเพิ่มเติม (ถ้ามี)
+                </label>
+                <textarea id="reviewFeedback" placeholder="แบ่งปันความคิดเห็นของคุณ..." style="width: 100%; min-height: 100px; padding: 12px; border-radius: 10px; border: 1px solid rgba(155, 89, 182, 0.3); background: rgba(255, 255, 255, 0.05); color: #fff; font-family: 'Sarabun', sans-serif; font-size: 14px; resize: vertical;" maxlength="1000"></textarea>
+                <div style="text-align: right; color: #999; font-size: 12px; margin-top: 5px;">
+                    <span id="feedbackCount">0</span>/1000
+                </div>
+            </div>
+
+            <!-- Quick Questions -->
+            <div style="margin-bottom: 20px; padding: 15px; background: rgba(255, 255, 255, 0.03); border-radius: 10px; border: 1px solid rgba(155, 89, 182, 0.2);">
+                <div style="margin-bottom: 12px;">
+                    <label style="color: #ccc; font-size: 14px; cursor: pointer; display: flex; align-items: center;">
+                        <input type="checkbox" id="wasHelpful" style="margin-right: 10px; width: 18px; height: 18px; cursor: pointer;">
+                        การอ่านนี้เป็นประโยชน์กับคุณ
+                    </label>
+                </div>
+                <div>
+                    <label style="color: #ccc; font-size: 14px; cursor: pointer; display: flex; align-items: center;">
+                        <input type="checkbox" id="wouldRecommend" style="margin-right: 10px; width: 18px; height: 18px; cursor: pointer;">
+                        คุณจะแนะนำให้เพื่อนมาใช้บริการ
+                    </label>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div style="display: flex; gap: 10px;">
+                <button onclick="closeReviewModal()" style="flex: 1; padding: 12px; border-radius: 10px; border: 1px solid rgba(155, 89, 182, 0.5); background: transparent; color: #fff; cursor: pointer; font-size: 16px; font-family: 'Sarabun', sans-serif;">
+                    ปิด
+                </button>
+                <button onclick="submitReview()" style="flex: 1; padding: 12px; border-radius: 10px; border: none; background: linear-gradient(135deg, #f39c12, #e67e22); color: #fff; cursor: pointer; font-size: 16px; font-family: 'Sarabun', sans-serif; font-weight: 600;">
+                    ส่งความคิดเห็น
+                </button>
+            </div>
+
+            <!-- Submission Status -->
+            <div id="reviewStatus" style="margin-top: 15px; padding: 12px; border-radius: 10px; display: none; text-align: center; font-size: 14px;"></div>
         </div>
     </div>
 
@@ -1230,7 +1297,7 @@
                     <style>
                         body {
                             font-family: 'Sarabun', Arial, sans-serif;
-                            padding: 30px;
+                            padding: 20px;
                             max-width: 800px;
                             margin: 0 auto;
                             background: white;
@@ -1240,56 +1307,70 @@
                         h1 {
                             color: #9b59b6;
                             text-align: center;
-                            margin-bottom: 5px;
+                            margin-bottom: 3px;
                             margin-top: 0;
-                            font-size: 32px;
+                            font-size: 28px;
                         }
                         .subtitle {
                             text-align: center;
                             color: #666;
-                            margin-bottom: 20px;
+                            margin-bottom: 12px;
                             font-style: italic;
-                            font-size: 16px;
+                            font-size: 14px;
                         }
                         .reading-content {
-                            line-height: 2;
+                            line-height: 1.8;
                             white-space: pre-wrap;
-                            font-size: 18px;
+                            font-size: 17px;
                         }
                         .message-wizard {
                             background: #f8f5fc;
-                            padding: 25px;
+                            padding: 18px;
                             border-radius: 10px;
-                            margin: 15px 0;
+                            margin: 10px 0;
                             border-left: 4px solid #9b59b6;
                         }
                         .wizard-avatar {
-                            font-size: 28px;
-                            margin-right: 10px;
+                            font-size: 24px;
+                            margin-right: 8px;
                         }
                         .reading-text {
-                            line-height: 2;
-                            font-size: 18px;
+                            line-height: 1.8;
+                            font-size: 17px;
                         }
                         .footer {
-                            margin-top: 40px;
-                            padding-top: 20px;
+                            margin-top: 25px;
+                            padding-top: 15px;
                             border-top: 2px solid #9b59b6;
                             text-align: center;
                             color: #999;
-                            font-size: 14px;
+                            font-size: 12px;
                         }
                         @media print {
                             body {
-                                padding: 20px;
-                                font-size: 16px;
+                                padding: 15px;
+                                font-size: 15px;
                             }
                             h1 {
-                                font-size: 28px;
+                                font-size: 24px;
+                                margin-bottom: 2px;
+                            }
+                            .subtitle {
+                                margin-bottom: 10px;
+                                font-size: 13px;
+                            }
+                            .message-wizard {
+                                padding: 15px;
+                                margin: 8px 0;
                             }
                             .reading-content,
                             .reading-text {
-                                font-size: 16px;
+                                font-size: 15px;
+                                line-height: 1.7;
+                            }
+                            .footer {
+                                margin-top: 20px;
+                                padding-top: 12px;
                             }
                         }
                     </style>
@@ -1456,6 +1537,134 @@
                 });
             };
         }
+
+        // ============ REVIEW SYSTEM ============
+        let selectedRating = 0;
+
+        function showReviewModal() {
+            document.getElementById('reviewModal').style.display = 'flex';
+
+            // Set up star rating interactivity
+            const stars = document.querySelectorAll('.star');
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    selectedRating = parseInt(this.dataset.rating);
+                    updateStars();
+                });
+                star.addEventListener('mouseenter', function() {
+                    const hoverRating = parseInt(this.dataset.rating);
+                    updateStars(hoverRating);
+                });
+            });
+
+            document.getElementById('starRating').addEventListener('mouseleave', function() {
+                updateStars();
+            });
+
+            // Character counter
+            document.getElementById('reviewFeedback').addEventListener('input', function() {
+                document.getElementById('feedbackCount').textContent = this.value.length;
+            });
+        }
+
+        function closeReviewModal() {
+            document.getElementById('reviewModal').style.display = 'none';
+            // Reset form
+            selectedRating = 0;
+            updateStars();
+            document.getElementById('reviewFeedback').value = '';
+            document.getElementById('feedbackCount').textContent = '0';
+            document.getElementById('wasHelpful').checked = false;
+            document.getElementById('wouldRecommend').checked = false;
+            document.getElementById('reviewStatus').style.display = 'none';
+        }
+
+        function updateStars(hoverRating = null) {
+            const rating = hoverRating || selectedRating;
+            const stars = document.querySelectorAll('.star');
+            const ratingTexts = ['', 'ไม่พอใจ', 'พอใช้', 'ดี', 'ดีมาก', 'ยอดเยี่ยม!'];
+
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.textContent = '★';
+                    star.style.color = '#f39c12';
+                } else {
+                    star.textContent = '☆';
+                    star.style.color = '#666';
+                }
+            });
+
+            document.getElementById('ratingText').textContent = rating > 0 ? ratingTexts[rating] : '';
+        }
+
+        async function submitReview() {
+            // Validation
+            if (selectedRating === 0) {
+                showReviewStatus('❌ กรุณาให้คะแนนดาวก่อนส่งความคิดเห็น', 'error');
+                return;
+            }
+
+            const feedback = document.getElementById('reviewFeedback').value.trim();
+            const wasHelpful = document.getElementById('wasHelpful').checked;
+            const wouldRecommend = document.getElementById('wouldRecommend').checked;
+
+            // Show loading
+            showReviewStatus('⏳ กำลังส่งความคิดเห็น...', 'loading');
+
+            try {
+                const response = await fetch('/api/submit-review', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        rating: selectedRating,
+                        feedback: feedback,
+                        package: selectedPackage || 'Unknown',
+                        topic: selectedTopicName || 'Unknown',
+                        helpful: wasHelpful,
+                        wouldRecommend: wouldRecommend
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showReviewStatus('✅ ' + data.message, 'success');
+
+                    // Close modal after 2 seconds
+                    setTimeout(() => {
+                        closeReviewModal();
+                    }, 2000);
+                } else {
+                    showReviewStatus('❌ เกิดข้อผิดพลาด: ' + (data.error || 'กรุณาลองใหม่อีกครั้ง'), 'error');
+                }
+            } catch (error) {
+                console.error('Error submitting review:', error);
+                showReviewStatus('❌ เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง', 'error');
+            }
+        }
+
+        function showReviewStatus(message, type) {
+            const statusEl = document.getElementById('reviewStatus');
+            statusEl.textContent = message;
+            statusEl.style.display = 'block';
+
+            if (type === 'success') {
+                statusEl.style.background = 'rgba(46, 204, 113, 0.2)';
+                statusEl.style.border = '1px solid #2ecc71';
+                statusEl.style.color = '#2ecc71';
+            } else if (type === 'error') {
+                statusEl.style.background = 'rgba(231, 76, 60, 0.2)';
+                statusEl.style.border = '1px solid #e74c3c';
+                statusEl.style.color = '#e74c3c';
+            } else {
+                statusEl.style.background = 'rgba(243, 156, 18, 0.2)';
+                statusEl.style.border = '1px solid #f39c12';
+                statusEl.style.color = '#f39c12';
+            }
+        }
+        // ============ END REVIEW SYSTEM ============
 
         function startOver() {
             goToScreen('topicScreen');
