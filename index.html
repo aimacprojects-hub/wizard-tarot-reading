@@ -707,20 +707,35 @@
                     conversationHistory = savedSession.conversationHistory;
                     userProfile = savedSession.userProfile;
 
-                    // Restore UI
-                    goToScreen(currentScreen);
-                    if (currentScreen === 'chatScreen') {
-                        // Rebuild chat history
-                        const chatDiv = document.getElementById('chatMessages');
-                        conversationHistory.forEach(msg => {
-                            if (msg.role === 'wizard') {
-                                addWizardMessage(msg.text);
-                            } else {
-                                addUserMessage(msg.text);
-                            }
-                        });
-                        document.getElementById('followUpCount').textContent = `คำถามติดตามเหลือ: ${followUpCount}`;
-                    }
+                    // Wait for DOM to be ready, then restore UI
+                    setTimeout(() => {
+                        // Restore UI
+                        goToScreen(currentScreen);
+
+                        // Update progress indicator based on screen
+                        const progressMap = {
+                            'topicScreen': 1,
+                            'questionScreen': 2,
+                            'packageScreen': 3,
+                            'cardScreen': 4,
+                            'chatScreen': 5
+                        };
+                        updateProgress(progressMap[currentScreen] || 1);
+
+                        if (currentScreen === 'chatScreen') {
+                            // Rebuild chat history
+                            const chatDiv = document.getElementById('chatMessages');
+                            chatDiv.innerHTML = ''; // Clear first
+                            conversationHistory.forEach(msg => {
+                                if (msg.role === 'wizard') {
+                                    addWizardMessage(msg.text);
+                                } else {
+                                    addUserMessage(msg.text);
+                                }
+                            });
+                            document.getElementById('followUpCount').textContent = `คำถามติดตามเหลือ: ${followUpCount}`;
+                        }
+                    }, 100);
                 } else {
                     clearSession();
                 }
@@ -915,6 +930,7 @@
 
                     // Add actual reading
                     addWizardMessage(reading);
+                    saveSession(); // Save after successful reading
                 } catch (error) {
                     retryCount++;
                     console.error(`Error generating reading (attempt ${retryCount}/${maxRetries}):`, error);
@@ -985,6 +1001,7 @@
                 const reading = await generateReading(selectedTopic, userQuestion, selectedPackage.type, false);
                 chatDiv.innerHTML = '';
                 addWizardMessage(reading);
+                saveSession(); // Save after successful retry
             } catch (error) {
                 console.error('Retry failed:', error);
                 chatDiv.innerHTML = '';
