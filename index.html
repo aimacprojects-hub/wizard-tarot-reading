@@ -904,7 +904,7 @@
 
             conversationHistory = [];
 
-            // Show loading message with animation
+            // Show loading message with animation (don't save to history)
             addWizardMessage(`
                 <span class="loading-float">🔮</span>
                 <span class="loading-animation">พ่อมดกำลังสานดวงและเปิดไพ่ของคุณ...</span>
@@ -913,7 +913,7 @@
                 <span class="loading-spinner">✨</span>
                 <span class="loading-animation">💫</span>
                 <span class="loading-spinner">🌟</span>
-            `);
+            `, false);
 
             // Call API for initial reading with retry mechanism
             let retryCount = 0;
@@ -936,7 +936,7 @@
                     console.error(`Error generating reading (attempt ${retryCount}/${maxRetries}):`, error);
 
                     if (retryCount < maxRetries) {
-                        // Update loading message to show retry
+                        // Update loading message to show retry (don't save to history)
                         const chatDiv = document.getElementById('chatMessages');
                         chatDiv.innerHTML = '';
                         addWizardMessage(`
@@ -947,7 +947,7 @@
                             <span class="loading-spinner">✨</span>
                             <span class="loading-animation">💫</span>
                             <span class="loading-spinner">🌟</span>
-                        `);
+                        `, false);
                         // Wait 2 seconds before retrying
                         await new Promise(resolve => setTimeout(resolve, 2000));
                     } else {
@@ -985,7 +985,7 @@
             const chatDiv = document.getElementById('chatMessages');
             chatDiv.innerHTML = '';
 
-            // Show loading message
+            // Show loading message (don't save to history)
             addWizardMessage(`
                 <span class="loading-float">🔮</span>
                 <span class="loading-animation">พ่อมดกำลังสานดวงและเปิดไพ่ของคุณ...</span>
@@ -994,7 +994,7 @@
                 <span class="loading-spinner">✨</span>
                 <span class="loading-animation">💫</span>
                 <span class="loading-spinner">🌟</span>
-            `);
+            `, false);
 
             // Try again
             try {
@@ -1057,7 +1057,7 @@
             }
         }
 
-        function addWizardMessage(text) {
+        function addWizardMessage(text, saveToHistory = true) {
             const chatDiv = document.getElementById('chatMessages');
             const msg = document.createElement('div');
             msg.className = 'chat-message';
@@ -1076,7 +1076,10 @@
             chatDiv.appendChild(msg);
             chatDiv.scrollTop = chatDiv.scrollHeight;
 
-            conversationHistory.push({ role: 'wizard', text });
+            // Only save to history if not a temporary message (like loading indicators)
+            if (saveToHistory) {
+                conversationHistory.push({ role: 'wizard', text });
+            }
         }
 
         function addUserMessage(text) {
