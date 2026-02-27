@@ -283,6 +283,13 @@
             font-size: 24px;
         }
 
+        .reading-text {
+            display: inline-block;
+            width: 90%;
+            line-height: 1.8;
+            white-space: pre-wrap;
+        }
+
         .follow-up-input {
             display: flex;
             gap: 10px;
@@ -780,10 +787,16 @@
             const chatDiv = document.getElementById('chatMessages');
             const msg = document.createElement('div');
             msg.className = 'chat-message';
+
+            // Format the text with proper line breaks
+            const formattedText = text
+                .replace(/\n\n/g, '<br><br>')  // Double line breaks
+                .replace(/\n/g, '<br>');         // Single line breaks
+
             msg.innerHTML = `
                 <div class="message-wizard">
                     <span class="wizard-avatar">🧙‍♂️</span>
-                    <div style="display: inline-block; width: 90%;">${text}</div>
+                    <div class="reading-text">${formattedText}</div>
                 </div>
             `;
             chatDiv.appendChild(msg);
