@@ -34,6 +34,43 @@
             50% { background-position: 100% 100%; }
         }
 
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.6;
+                transform: scale(1.1);
+            }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .loading-animation {
+            display: inline-block;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            animation: spin 2s linear infinite;
+            margin-left: 5px;
+        }
+
+        .loading-float {
+            display: inline-block;
+            animation: float 2s ease-in-out infinite;
+        }
+
         .container {
             max-width: 900px;
             margin: 0 auto;
@@ -739,8 +776,16 @@
 
             conversationHistory = [];
 
-            // Show loading message
-            addWizardMessage('🔮 พ่อมดกำลังสานดวงและเปิดไพ่ของคุณ...<br><em style="color: #c9b3d4;">กรุณารอสักครู่ ✨</em>');
+            // Show loading message with animation
+            addWizardMessage(`
+                <span class="loading-float">🔮</span>
+                <span class="loading-animation">พ่อมดกำลังสานดวงและเปิดไพ่ของคุณ...</span>
+                <br>
+                <em style="color: #c9b3d4;">กรุณารอสักครู่</em>
+                <span class="loading-spinner">✨</span>
+                <span class="loading-animation">💫</span>
+                <span class="loading-spinner">🌟</span>
+            `);
 
             // Call API for initial reading
             try {
