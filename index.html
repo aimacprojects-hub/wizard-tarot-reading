@@ -318,11 +318,12 @@
         }
 
         .message-wizard {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
             padding: 20px 25px;
             border-radius: 15px 15px 15px 5px;
             margin-right: 5%;
             font-size: 17px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
 
         .wizard-avatar {
@@ -498,7 +499,10 @@
                 <p style="color: #f39c12; background: rgba(243, 156, 18, 0.1); border-left: 3px solid #f39c12; padding: 12px 15px; border-radius: 8px; font-size: 14px; margin-bottom: 20px; line-height: 1.6;">
                     ✨ <strong>เคล็ดลับสำคัญ:</strong> ยิ่งคำถามของคุณชัดเจนและตรงประเด็นเท่าไหร่ คำทำนายจากไพ่ก็จะแม่นยำและตอบโจทย์มากขึ้นเท่านั้น พ่อมดจะสามารถมองเห็นเส้นทางและคำตอบที่เหมาะกับคุณได้ชัดเจนยิ่งขึ้น 🔮
                 </p>
-                <textarea class="question-input" id="questionInput" rows="3" placeholder="พิมพ์คำถามของคุณที่นี่..."></textarea>
+                <textarea class="question-input" id="questionInput" rows="3" placeholder="พิมพ์คำถามของคุณที่นี่..." oninput="updateCharCount()"></textarea>
+                <p style="color: #888; font-size: 13px; margin: 5px 0 15px 0; text-align: right;">
+                    <span id="charCount">0</span>/500 ตัวอักษร (ขั้นต่ำ 10)
+                </p>
                 <p style="color: #aaa; font-size: 14px; margin-bottom: 15px;">💡 ตัวอย่างคำถาม:</p>
                 <div class="suggestions" id="suggestions"></div>
 
@@ -633,6 +637,46 @@
     </div>
 
     <script>
+        // Session persistence functions
+        function saveSession() {
+            const sessionData = {
+                currentScreen,
+                selectedTopic,
+                selectedTopicName,
+                userQuestion,
+                selectedPackage,
+                followUpCount,
+                selectedCards,
+                conversationHistory,
+                userProfile,
+                timestamp: Date.now()
+            };
+            localStorage.setItem('tarotSession', JSON.stringify(sessionData));
+        }
+
+        function loadSession() {
+            try {
+                const saved = localStorage.getItem('tarotSession');
+                if (saved) {
+                    const data = JSON.parse(saved);
+                    // Only restore if less than 24 hours old
+                    if (Date.now() - data.timestamp < 24 * 60 * 60 * 1000) {
+                        return data;
+                    } else {
+                        localStorage.removeItem('tarotSession');
+                    }
+                }
+            } catch (e) {
+                console.error('Error loading session:', e);
+            }
+            return null;
+        }
+
+        function clearSession() {
+            localStorage.removeItem('tarotSession');
+        }
+
+        // Initialize state
         let currentScreen = 'topicScreen';
         let selectedTopic = '';
         let selectedTopicName = '';
@@ -646,6 +690,42 @@
             gender: '',
             emotionalState: ''
         };
+
+        // Restore session on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedSession = loadSession();
+            if (savedSession && savedSession.currentScreen !== 'topicScreen') {
+                if (confirm('🔮 พบเซสชั่นที่ค้างไว้\n\nต้องการกลับมาทำต่อจากจุดเดิมหรือไม่?\n\nClick OK = ทำต่อ\nClick Cancel = เริ่มใหม่')) {
+                    // Restore all state
+                    currentScreen = savedSession.currentScreen;
+                    selectedTopic = savedSession.selectedTopic;
+                    selectedTopicName = savedSession.selectedTopicName;
+                    userQuestion = savedSession.userQuestion;
+                    selectedPackage = savedSession.selectedPackage;
+                    followUpCount = savedSession.followUpCount;
+                    selectedCards = savedSession.selectedCards;
+                    conversationHistory = savedSession.conversationHistory;
+                    userProfile = savedSession.userProfile;
+
+                    // Restore UI
+                    goToScreen(currentScreen);
+                    if (currentScreen === 'chatScreen') {
+                        // Rebuild chat history
+                        const chatDiv = document.getElementById('chatMessages');
+                        conversationHistory.forEach(msg => {
+                            if (msg.role === 'wizard') {
+                                addWizardMessage(msg.text);
+                            } else {
+                                addUserMessage(msg.text);
+                            }
+                        });
+                        document.getElementById('followUpCount').textContent = `คำถามติดตามเหลือ: ${followUpCount}`;
+                    }
+                } else {
+                    clearSession();
+                }
+            }
+        });
 
         const suggestions = {
             love: [
@@ -686,10 +766,27 @@
             ]
         };
 
+        function updateCharCount() {
+            const input = document.getElementById('questionInput');
+            const count = document.getElementById('charCount');
+            const length = input.value.length;
+            count.textContent = length;
+
+            // Color coding
+            if (length < 10) {
+                count.style.color = '#e74c3c'; // Red
+            } else if (length > 500) {
+                count.style.color = '#e74c3c'; // Red
+            } else {
+                count.style.color = '#2ecc71'; // Green
+            }
+        }
+
         function selectTopic(topic, name) {
             selectedTopic = topic;
             selectedTopicName = name;
             document.getElementById('selectedTopicDisplay').textContent = name;
+            saveSession();
 
             const suggestionsDiv = document.getElementById('suggestions');
             suggestionsDiv.innerHTML = '';
@@ -708,9 +805,21 @@
         }
 
         function goToPackages() {
-            userQuestion = document.getElementById('questionInput').value;
-            if (!userQuestion.trim()) {
-                alert('กรุณาใส่คำถามของคุณ');
+            userQuestion = document.getElementById('questionInput').value.trim();
+
+            // Validate question
+            if (!userQuestion) {
+                alert('❌ กรุณาใส่คำถามของคุณ');
+                return;
+            }
+
+            if (userQuestion.length < 10) {
+                alert('❌ คำถามสั้นเกินไป\n\nกรุณาใส่คำถามอย่างน้อย 10 ตัวอักษร เพื่อให้พ่อมดเข้าใจคำถามของคุณได้ดีขึ้น\n\n(ปัจจุบัน: ' + userQuestion.length + ' ตัวอักษร)');
+                return;
+            }
+
+            if (userQuestion.length > 500) {
+                alert('❌ คำถามยาวเกินไป\n\nกรุณาย่อคำถามให้สั้นกว่า 500 ตัวอักษร\n\n(ปัจจุบัน: ' + userQuestion.length + ' ตัวอักษร)');
                 return;
             }
 
@@ -718,6 +827,7 @@
             userProfile.ageRange = document.getElementById('ageRange').value;
             userProfile.gender = document.getElementById('gender').value;
             userProfile.emotionalState = document.getElementById('emotionalState').value;
+            saveSession();
 
             goToScreen('packageScreen');
             updateProgress(3);
@@ -726,6 +836,7 @@
         function selectPackage(type, price, cards, followUps) {
             selectedPackage = { type, price, cards, followUps };
             followUpCount = followUps;
+            saveSession();
 
             goToScreen('cardScreen');
             updateProgress(4);
