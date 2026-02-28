@@ -205,19 +205,24 @@ Customer Details:`;
 - Use the mystical fairy-tale tone throughout
 
 EXAMPLES of correct card format:
+✅ "The Fool (ไพ่คนโง่เขลา)"
 ✅ "The Lovers (ไพ่คนรัก)"
-✅ "Three of Cups (สามถ้วย)"
+✅ "Death (ไพ่ความตาย)"
+✅ "Strength (ไพ่ความแข็งแกร่ง)"
+✅ "The Devil (ไพ่ปีศาจ)"
+✅ "The Hierophant (ไพ่นักบวช)"
 ✅ "The High Priestess (ไพ่นักบวชหญิง)"
+✅ "Three of Cups (สามถ้วย)"
 ✅ "Knight of Wands (อัศวินคทา)"
-✅ "The Fool (ไพ่คนโง่เขลา)" - use softer, poetic Thai translations
 ❌ "The Lovers" (missing Thai)
 ❌ "ไพ่คนรัก" (missing English)
 
 Thai Translation Guidelines:
-- Use SOFT, POETIC, RESPECTFUL language for Thai card names
-- Avoid harsh words - choose gentler, mystical alternatives
-- Examples: "คนโง่เขลา" (innocent fool) NOT "คนโง่", "การเปลี่ยนแปลง" (transformation) NOT harsh terms
-- Make Thai names sound beautiful and respectful to customers`;
+- ALWAYS show both English and Thai names
+- Use standard, clear Thai translations
+- Keep Thai names simple and easy to understand
+- Format: "English Name (ไพ่[Thai Name])" for Major Arcana
+- Format: "[Number/Court][Suit in Thai]" for Minor Arcana`;
 
   return prompt;
 }
