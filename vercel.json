@@ -3,5 +3,9 @@
     "api/**/*.js": {
       "maxDuration": 60
     }
-  }
+  },
+  "routes": [
+    { "src": "/admin-payments", "dest": "/admin-payments.html" },
+    { "src": "/admin-reviews", "dest": "/admin-reviews.html" }
+  ]
 }
