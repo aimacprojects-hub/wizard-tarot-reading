@@ -423,6 +423,22 @@
                             </div>
                         </div>
                     ` : ''}
+
+                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(155, 89, 182, 0.2); text-align: right;">
+                        <button onclick="deletePayment('${payment.id}')" style="
+                            padding: 8px 16px;
+                            border-radius: 8px;
+                            border: 1px solid #e74c3c;
+                            background: rgba(231, 76, 60, 0.1);
+                            color: #e74c3c;
+                            cursor: pointer;
+                            font-family: 'Sarabun', sans-serif;
+                            font-size: 14px;
+                            transition: all 0.3s;
+                        " onmouseover="this.style.background='rgba(231, 76, 60, 0.2)'" onmouseout="this.style.background='rgba(231, 76, 60, 0.1)'">
+                            🗑️ ลบรายการนี้
+                        </button>
+                    </div>
                 </div>
             `;
 
@@ -436,6 +452,36 @@
 
         function closeImageModal() {
             document.getElementById('imageModal').classList.remove('active');
+        }
+
+        async function deletePayment(paymentId) {
+            // Confirmation dialog
+            if (!confirm('คุณแน่ใจหรือไม่ที่จะลบรายการนี้?\n\nการลบจะไม่สามารถย้อนกลับได้')) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/delete-payment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ paymentId })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('✅ ลบรายการเรียบร้อยแล้ว');
+                    // Reload payments
+                    loadPayments();
+                } else {
+                    alert('❌ เกิดข้อผิดพลาด: ' + (data.error || 'ไม่สามารถลบได้'));
+                }
+            } catch (error) {
+                console.error('Error deleting payment:', error);
+                alert('❌ เกิดข้อผิดพลาดในการเชื่อมต่อ');
+            }
         }
 
         // Load payments on page load

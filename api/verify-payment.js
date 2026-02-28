@@ -184,6 +184,20 @@ CRITICAL RULES (MUST FOLLOW):
 
     // Check if payment is verified
     if (verification.verified) {
+      // CHECK FOR DUPLICATE REFERENCE FIRST
+      if (verification.reference) {
+        const existingPayment = await kv.get(`payment_ref:${verification.reference}`);
+        if (existingPayment) {
+          console.log('DUPLICATE PAYMENT ATTEMPT - Reference already used:', verification.reference);
+          return res.status(200).json({
+            success: true,
+            verified: false,
+            message: 'การโอนเงินนี้ถูกใช้งานแล้ว กรุณาใช้สลิปโอนเงินใหม่',
+            error: 'duplicate_reference'
+          });
+        }
+      }
+
       // Generate unique payment ID
       const paymentId = `pay_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
@@ -200,19 +214,19 @@ CRITICAL RULES (MUST FOLLOW):
         verificationData: verification
       };
 
-      // Save to Vercel KV
-      await kv.set(`payment:${paymentId}`, paymentRecord);
-      await kv.zadd('payments:all', {
-        score: Date.now(),
-        member: paymentId
-      });
-
-      // Prevent duplicate use of same reference
+      // Save reference FIRST to prevent race conditions
       if (verification.reference) {
         await kv.set(`payment_ref:${verification.reference}`, paymentId, {
           ex: 86400 // Expire after 24 hours
         });
       }
+
+      // Then save payment record
+      await kv.set(`payment:${paymentId}`, paymentRecord);
+      await kv.zadd('payments:all', {
+        score: Date.now(),
+        member: paymentId
+      });
 
       return res.status(200).json({
         success: true,
