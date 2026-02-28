@@ -1513,12 +1513,12 @@
                 totalFollowUpsUsed++;
                 saveSession(); // Save after follow-up answer
 
-                // Show review incentive after FIRST follow-up answer
+                // Show review incentive after FIRST follow-up answer (wait 30 seconds)
                 if (!reviewIncentiveShown && totalFollowUpsUsed === 1 && followUpCount > 0) {
                     reviewIncentiveShown = true;
                     setTimeout(() => {
                         showReviewIncentive();
-                    }, 2000);
+                    }, 30000); // 30 seconds delay
                 }
 
                 if (followUpCount === 0) {
