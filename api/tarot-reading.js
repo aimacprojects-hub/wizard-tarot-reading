@@ -209,8 +209,15 @@ EXAMPLES of correct card format:
 ✅ "Three of Cups (สามถ้วย)"
 ✅ "The High Priestess (ไพ่นักบวชหญิง)"
 ✅ "Knight of Wands (อัศวินคทา)"
+✅ "The Fool (ไพ่คนโง่เขลา)" - use softer, poetic Thai translations
 ❌ "The Lovers" (missing Thai)
-❌ "ไพ่คนรัก" (missing English)`;
+❌ "ไพ่คนรัก" (missing English)
+
+Thai Translation Guidelines:
+- Use SOFT, POETIC, RESPECTFUL language for Thai card names
+- Avoid harsh words - choose gentler, mystical alternatives
+- Examples: "คนโง่เขลา" (innocent fool) NOT "คนโง่", "การเปลี่ยนแปลง" (transformation) NOT harsh terms
+- Make Thai names sound beautiful and respectful to customers`;
 
   return prompt;
 }
