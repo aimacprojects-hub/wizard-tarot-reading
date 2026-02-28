@@ -595,7 +595,81 @@
             </div>
         </div>
 
-        <!-- Screen 4: Card Drawing -->
+        <!-- Screen 4: Payment -->
+        <div class="screen" id="paymentScreen">
+            <h2 style="text-align: center; margin-bottom: 20px; color: #9b59b6;">💳 ชำระเงิน</h2>
+
+            <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(155, 89, 182, 0.3); border-radius: 15px; padding: 25px; margin-bottom: 25px;">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div style="font-size: 18px; color: #f39c12; margin-bottom: 5px;">แพ็กเกจที่เลือก:</div>
+                    <div id="selectedPackageName" style="font-size: 24px; font-weight: 600; color: #fff; margin-bottom: 10px;">-</div>
+                    <div style="font-size: 36px; font-weight: 700; color: #f39c12;" id="paymentAmount">฿0</div>
+                </div>
+
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                    <h3 style="text-align: center; color: #9b59b6; margin-bottom: 15px; font-size: 18px;">📱 วิธีการชำระเงิน</h3>
+
+                    <!-- QR Code Payment -->
+                    <div style="text-align: center; margin-bottom: 25px;">
+                        <div style="color: #ccc; margin-bottom: 10px; font-size: 16px; font-weight: 600;">สแกน QR Code (PromptPay)</div>
+                        <div style="background: white; padding: 15px; border-radius: 10px; display: inline-block; margin-bottom: 10px;">
+                            <img src="/images/promptpay-qr.jpg" alt="PromptPay QR Code" style="width: 200px; height: 200px; display: block;">
+                        </div>
+                        <div style="color: #999; font-size: 14px;">สแกนด้วยแอปธนาคารของคุณ</div>
+                    </div>
+
+                    <div style="height: 1px; background: rgba(155, 89, 182, 0.3); margin: 20px 0;"></div>
+
+                    <!-- Manual Transfer -->
+                    <div style="margin-bottom: 15px;">
+                        <div style="color: #ccc; margin-bottom: 15px; font-size: 16px; font-weight: 600; text-align: center;">โอนเงินผ่านธนาคาร</div>
+                        <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px;">
+                            <div style="margin-bottom: 10px;">
+                                <span style="color: #999;">ธนาคาร:</span>
+                                <span style="color: #fff; font-weight: 600;">Kasikorn Bank (กสิกรไทย)</span>
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <span style="color: #999;">ชื่อบัญชี:</span>
+                                <span style="color: #fff; font-weight: 600;">Mr. Thomas Som Janisch</span>
+                            </div>
+                            <div>
+                                <span style="color: #999;">เลขบัญชี:</span>
+                                <span style="color: #f39c12; font-weight: 600; font-size: 18px;">847-2-10962-7</span>
+                                <button onclick="copyAccountNumber()" style="margin-left: 10px; padding: 5px 10px; background: rgba(243, 156, 18, 0.2); border: 1px solid #f39c12; color: #f39c12; border-radius: 5px; cursor: pointer; font-size: 12px;">📋 คัดลอก</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upload Section -->
+                <div style="background: rgba(243, 156, 18, 0.1); border: 2px dashed #f39c12; border-radius: 12px; padding: 20px; text-align: center;">
+                    <div style="font-size: 18px; color: #f39c12; margin-bottom: 15px; font-weight: 600;">📸 อัปโหลดหลักฐานการโอนเงิน</div>
+                    <div style="color: #ccc; margin-bottom: 15px; font-size: 14px;">
+                        ถ่ายภาพหน้าจอยืนยันการโอนเงินจากแอปธนาคาร<br>
+                        ระบบจะตรวจสอบอัตโนมัติภายใน 5-10 วินาที
+                    </div>
+
+                    <input type="file" id="paymentProof" accept="image/*" style="display: none;" onchange="handlePaymentProofUpload(event)">
+                    <button onclick="document.getElementById('paymentProof').click()" class="btn" style="background: linear-gradient(135deg, #f39c12, #e67e22); margin-bottom: 10px;">
+                        📤 เลือกไฟล์ภาพ
+                    </button>
+
+                    <div id="uploadPreview" style="margin-top: 15px; display: none;">
+                        <img id="previewImage" style="max-width: 100%; max-height: 300px; border-radius: 10px; margin-bottom: 10px;">
+                        <div id="uploadStatus" style="color: #f39c12; font-size: 14px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-container">
+                <button class="btn btn-secondary" onclick="goBack('packageScreen')">← กลับ</button>
+                <button class="btn" id="verifyPaymentBtn" onclick="verifyPayment()" disabled style="opacity: 0.5;">
+                    ✅ ยืนยันการชำระเงิน
+                </button>
+            </div>
+        </div>
+
+        <!-- Screen 5: Card Drawing -->
         <div class="screen" id="cardScreen">
             <h2 style="text-align: center; margin-bottom: 20px; color: #9b59b6;">เลือกไพ่ของคุณ</h2>
             <p style="text-align: center; color: #c9b3d4; margin-bottom: 20px;">
@@ -613,7 +687,7 @@
             </div>
         </div>
 
-        <!-- Screen 5: Reading & Chat -->
+        <!-- Screen 6: Reading & Chat -->
         <div class="screen" id="chatScreen">
             <h2 style="text-align: center; margin-bottom: 20px; color: #9b59b6;">นิทานดวงชะตาของคุณ</h2>
             <div class="chat-container" id="chatMessages"></div>
@@ -983,9 +1057,19 @@
             followUpCount = followUps;
             saveSession();
 
-            goToScreen('cardScreen');
+            // Show payment screen
+            document.getElementById('selectedPackageName').textContent = type;
+            document.getElementById('paymentAmount').textContent = `฿${price}`;
+
+            goToScreen('paymentScreen');
             updateProgress(4);
-            initializeCards(cards);
+        }
+
+        function proceedToCardSelection() {
+            // Called after payment verification
+            goToScreen('cardScreen');
+            updateProgress(5);
+            initializeCards(selectedPackage.cards);
         }
 
         function initializeCards(count) {
@@ -1665,6 +1749,105 @@
             }
         }
         // ============ END REVIEW SYSTEM ============
+
+        // ============ PAYMENT SYSTEM ============
+        let uploadedProofImage = null;
+
+        function copyAccountNumber() {
+            const accountNumber = '847-2-10962-7';
+            navigator.clipboard.writeText(accountNumber).then(() => {
+                alert('✅ คัดลอกเลขบัญชีเรียบร้อย!\n' + accountNumber);
+            }).catch(() => {
+                alert('เลขบัญชี: ' + accountNumber);
+            });
+        }
+
+        function handlePaymentProofUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Check file type
+            if (!file.type.startsWith('image/')) {
+                alert('❌ กรุณาเลือกไฟล์รูปภาพเท่านั้น');
+                return;
+            }
+
+            // Check file size (max 10MB)
+            if (file.size > 10 * 1024 * 1024) {
+                alert('❌ ไฟล์ใหญ่เกินไป กรุณาเลือกไฟล์ที่เล็กกว่า 10MB');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedProofImage = e.target.result;
+
+                // Show preview
+                document.getElementById('previewImage').src = uploadedProofImage;
+                document.getElementById('uploadPreview').style.display = 'block';
+                document.getElementById('uploadStatus').textContent = '✅ อัปโหลดรูปภาพเรียบร้อย';
+
+                // Enable verify button
+                document.getElementById('verifyPaymentBtn').disabled = false;
+                document.getElementById('verifyPaymentBtn').style.opacity = '1';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function verifyPayment() {
+            if (!uploadedProofImage) {
+                alert('❌ กรุณาอัปโหลดหลักฐานการโอนเงินก่อน');
+                return;
+            }
+
+            const verifyBtn = document.getElementById('verifyPaymentBtn');
+            const statusEl = document.getElementById('uploadStatus');
+
+            // Show loading
+            verifyBtn.disabled = true;
+            verifyBtn.textContent = '⏳ กำลังตรวจสอบ...';
+            statusEl.textContent = '🔍 กำลังตรวจสอบหลักฐานการโอนเงินด้วย AI...';
+            statusEl.style.color = '#f39c12';
+
+            try {
+                const response = await fetch('/api/verify-payment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        image: uploadedProofImage,
+                        expectedAmount: selectedPackage.price,
+                        packageType: selectedPackage.type
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success && data.verified) {
+                    // Payment verified!
+                    statusEl.textContent = '✅ ชำระเงินสำเร็จ! กำลังพาคุณไปเลือกไพ่...';
+                    statusEl.style.color = '#2ecc71';
+
+                    setTimeout(() => {
+                        proceedToCardSelection();
+                    }, 2000);
+                } else {
+                    // Verification failed
+                    statusEl.textContent = '❌ ' + (data.message || 'ไม่สามารถยืนยันการชำระเงินได้ กรุณาตรวจสอบหลักฐานและลองใหม่อีกครั้ง');
+                    statusEl.style.color = '#e74c3c';
+                    verifyBtn.disabled = false;
+                    verifyBtn.textContent = '✅ ยืนยันการชำระเงิน';
+                }
+            } catch (error) {
+                console.error('Payment verification error:', error);
+                statusEl.textContent = '❌ เกิดข้อผิดพลาดในการตรวจสอบ กรุณาลองใหม่อีกครั้ง';
+                statusEl.style.color = '#e74c3c';
+                verifyBtn.disabled = false;
+                verifyBtn.textContent = '✅ ยืนยันการชำระเงิน';
+            }
+        }
+        // ============ END PAYMENT SYSTEM ============
 
         function startOver() {
             goToScreen('topicScreen');
