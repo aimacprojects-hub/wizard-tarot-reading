@@ -60,9 +60,9 @@ export default async function handler(req, res) {
               text: `You are a payment verification AI. Analyze this Thai bank transfer screenshot and extract the following information:
 
 1. Transfer amount (in Thai Baht)
-2. Recipient name (should match: Thomas Som Janisch or Mr. Thomas Som Janisch)
+2. Recipient name (should match ANY of these: "Thomas Som Janisch", "Mr. Thomas Som Janisch", "นาย โทมัส สม ยานนิช", "โทมัส สม ยานนิช", or similar variations in Thai/English)
 3. Bank account number (should match: 847-2-10962-7 or contain 10962)
-4. Transfer status (should be สำเร็จ, Success, or completed)
+4. Transfer status (should be สำเร็จ, Success, completed, or show a green checkmark)
 5. Transfer date and time
 6. Transaction reference/ID
 
@@ -80,15 +80,19 @@ Respond ONLY with a JSON object in this exact format:
   "verified": <true or false>
 }
 
-Set "amount_match" to true ONLY if amount equals exactly ${expectedAmount}.
+Set "amount_match" to true if amount equals exactly ${expectedAmount}.
+Set "recipient_match" to true if recipient name contains "Thomas", "โทมัส", "Janisch", or "ยานนิช".
+Set "account_match" to true if account number contains "10962" or "847-2-10962-7".
+Set "status_success" to true if transfer shows success status or green checkmark.
+
 Set "verified" to true ONLY if ALL these are true:
 - Amount matches exactly (${expectedAmount})
-- Recipient name matches (Thomas Som Janisch)
-- Account number matches (847-2-10962-7)
+- Recipient name matches (contains Thomas/โทมัส or Janisch/ยานนิช)
+- Account number matches (contains 10962)
 - Status is success
 - Timestamp is within last 60 minutes
 
-Be strict in verification. If any field is unclear or doesn't match, set verified to false.`
+Be FLEXIBLE with name matching (accept Thai or English). Be strict with amount and account number.`
             }
           ]
         }]
