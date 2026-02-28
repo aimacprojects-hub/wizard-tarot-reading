@@ -790,6 +790,7 @@
                 selectedCards,
                 conversationHistory,
                 userProfile,
+                paymentVerified: window.paymentVerified || false,
                 timestamp: Date.now()
             };
             localStorage.setItem('tarotSession', JSON.stringify(sessionData));
@@ -1067,6 +1068,8 @@
 
         function proceedToCardSelection() {
             // Called after payment verification
+            window.paymentVerified = true;
+            saveSession();
             goToScreen('cardScreen');
             updateProgress(5);
             initializeCards(selectedPackage.cards);
