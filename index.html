@@ -900,7 +900,8 @@
 
             const savedSession = loadSession();
             console.log('📂 Loading session:', savedSession ? { currentScreen: savedSession.currentScreen, paymentVerified: savedSession.paymentVerified } : 'No session');
-            if (savedSession && savedSession.currentScreen !== 'topicScreen') {
+            // ONLY restore session if payment was verified (customer protection - they paid!)
+            if (savedSession && savedSession.paymentVerified && savedSession.currentScreen !== 'topicScreen') {
                 // AUTO-RESTORE SESSION (no confirmation needed - customer protection!)
                 // Restore all state
                 currentScreen = savedSession.currentScreen;
@@ -1089,7 +1090,7 @@
             selectedTopic = topic;
             selectedTopicName = name;
             document.getElementById('selectedTopicDisplay').textContent = name;
-            saveSession();
+            // Don't save session yet - only save after payment
 
             const suggestionsDiv = document.getElementById('suggestions');
             suggestionsDiv.innerHTML = '';
@@ -1130,7 +1131,7 @@
             userProfile.ageRange = document.getElementById('ageRange').value;
             userProfile.gender = document.getElementById('gender').value;
             userProfile.emotionalState = document.getElementById('emotionalState').value;
-            saveSession();
+            // Don't save session yet - only save after payment
 
             goToScreen('packageScreen');
             updateProgress(3);
@@ -1205,7 +1206,7 @@
             const price = currentPricingTier.prices[packageTier];
             selectedPackage = { type, price, cards, followUps, packageTier };
             followUpCount = followUps;
-            saveSession();
+            // Don't save session yet - only save after payment
 
             // Check for test mode (skip payment)
             const urlParams = new URLSearchParams(window.location.search);
@@ -1227,7 +1228,7 @@
         function selectPackage(type, price, cards, followUps) {
             selectedPackage = { type, price, cards, followUps };
             followUpCount = followUps;
-            saveSession();
+            // Don't save session yet - only save after payment
 
             // Check for test mode (skip payment)
             const urlParams = new URLSearchParams(window.location.search);
