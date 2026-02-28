@@ -71,6 +71,33 @@
             animation: float 2s ease-in-out infinite;
         }
 
+        @keyframes dotPulse {
+            0%, 20% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        .loading-dots {
+            display: inline-block;
+        }
+
+        .loading-dots span {
+            animation: dotPulse 1.4s infinite;
+            opacity: 0;
+        }
+
+        .loading-dots span:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .loading-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
         .container {
             max-width: 900px;
             margin: 0 auto;
@@ -1146,7 +1173,7 @@
             // Show loading message with animation (don't save to history)
             addWizardMessage(`
                 <span class="loading-float">🔮</span>
-                <span class="loading-animation">พ่อมดกำลังสานดวงและเปิดไพ่ของคุณ...</span>
+                <span class="loading-animation">🧙‍♂️ พ่อมดกำลังสานดวงและเปิดไพ่ของคุณ<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></span>
                 <br>
                 <em style="color: #c9b3d4;">กรุณารอสักครู่</em>
                 <span class="loading-spinner">✨</span>
@@ -1180,7 +1207,7 @@
                         chatDiv.innerHTML = '';
                         addWizardMessage(`
                             <span class="loading-float">🔮</span>
-                            <span class="loading-animation">พ่อมดกำลังสานดวงและเปิดไพ่ของคุณ...</span>
+                            <span class="loading-animation">🧙‍♂️ พ่อมดกำลังสานดวงและเปิดไพ่ของคุณ<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></span>
                             <br>
                             <em style="color: #c9b3d4;">กำลังเชื่อมต่อกับดวงดาว... (ครั้งที่ ${retryCount + 1})</em>
                             <span class="loading-spinner">✨</span>
@@ -1227,7 +1254,7 @@
             // Show loading message (don't save to history)
             addWizardMessage(`
                 <span class="loading-float">🔮</span>
-                <span class="loading-animation">พ่อมดกำลังสานดวงและเปิดไพ่ของคุณ...</span>
+                <span class="loading-animation">🧙‍♂️ พ่อมดกำลังสานดวงและเปิดไพ่ของคุณ<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></span>
                 <br>
                 <em style="color: #c9b3d4;">กรุณารอสักครู่</em>
                 <span class="loading-spinner">✨</span>
@@ -1350,7 +1377,7 @@
             document.getElementById('followUpCount').textContent = `คำถามติดตามเหลือ: ${followUpCount}`;
 
             // Show loading (don't save to history)
-            addWizardMessage('💫 พ่อมดกำลังมองลึกเข้าไปในไพ่...', false);
+            addWizardMessage('🧙‍♂️ พ่อมดกำลังมองลึกเข้าไปในไพ่<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>', false);
 
             try {
                 const response = await generateReading(selectedTopic, question, selectedPackage.type, true);
