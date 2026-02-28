@@ -1107,6 +1107,15 @@
             followUpCount = followUps;
             saveSession();
 
+            // Check for test mode (skip payment)
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('test') === 'skip') {
+                // TEST MODE: Skip payment and go directly to card selection
+                console.log('TEST MODE: Skipping payment');
+                proceedToCardSelection();
+                return;
+            }
+
             // Show payment screen
             document.getElementById('selectedPackageName').textContent = type;
             document.getElementById('paymentAmount').textContent = `฿${price}`;
