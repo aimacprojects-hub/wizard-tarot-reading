@@ -883,6 +883,9 @@
             gender: '',
             emotionalState: ''
         };
+        let reviewIncentiveShown = false;
+        let hasEarnedBonus = false;
+        let totalFollowUpsUsed = 0;
 
         // Restore session on page load
         window.addEventListener('DOMContentLoaded', () => {
@@ -1507,11 +1510,28 @@
 
                 // Add real response
                 addWizardMessage(response);
+                totalFollowUpsUsed++;
                 saveSession(); // Save after follow-up answer
+
+                // Show review incentive after FIRST follow-up answer
+                if (!reviewIncentiveShown && totalFollowUpsUsed === 1 && followUpCount > 0) {
+                    reviewIncentiveShown = true;
+                    setTimeout(() => {
+                        showReviewIncentive();
+                    }, 2000);
+                }
 
                 if (followUpCount === 0) {
                     setTimeout(() => {
-                        addWizardMessage(`คุณได้ใช้คำถามติดตามครบแล้ว! 🌟 ขอให้โชคดีในเส้นทางชีวิตของคุณ! 💫✨`);
+                        // If they haven't reviewed yet, remind them
+                        if (!hasEarnedBonus) {
+                            addWizardMessage(`คุณได้ใช้คำถามติดตามครบแล้ว! 🌟\n\n💬 ช่วยเราหน่อยได้ไหม? แชร์ประสบการณ์ของคุณเพื่อช่วยคนอื่น 🙏`);
+                            setTimeout(() => {
+                                showFinalReviewRequest();
+                            }, 1000);
+                        } else {
+                            addWizardMessage(`คุณได้ใช้คำถามติดตามครบแล้ว! 🌟 ขอให้โชคดีในเส้นทางชีวิตของคุณ! 💫✨`);
+                        }
                         document.getElementById('followUpInput').disabled = true;
                         saveSession(); // Save when all follow-ups used
                     }, 1500);
@@ -1642,6 +1662,104 @@
             setTimeout(() => {
                 printWindow.print();
             }, 250);
+        }
+
+        // Review incentive system
+        function showReviewIncentive() {
+            const popup = `
+                <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, #1a1f3a 0%, #2d1b4e 100%); border: 2px solid #f39c12; border-radius: 20px; padding: 30px; max-width: 500px; width: 90%; box-shadow: 0 0 50px rgba(243, 156, 18, 0.6); z-index: 10000;" id="reviewIncentivePopup">
+                    <div style="text-align: center;">
+                        <div style="font-size: 48px; margin-bottom: 15px;">🎁</div>
+                        <h2 style="color: #f39c12; margin: 0 0 15px 0;">ชอบการอ่านไพ่นี้ไหม?</h2>
+                        <p style="color: #fff; font-size: 18px; margin-bottom: 20px;">รีวิวด่วน 30 วินาที<br><span style="color: #2ecc71; font-weight: 700; font-size: 22px;">= รับคำถามติดตามฟรี +1 ทันที!</span></p>
+                        <button onclick="openQuickReview()" style="background: linear-gradient(135deg, #f39c12, #e67e22); color: white; border: none; padding: 18px 40px; border-radius: 30px; font-size: 20px; font-weight: 700; cursor: pointer; font-family: 'Sarabun', sans-serif; margin-bottom: 15px; width: 100%; box-shadow: 0 5px 20px rgba(243, 156, 18, 0.4);">⭐ รีวิวเลย รับโบนัสทันที!</button>
+                        <button onclick="closeReviewIncentive()" style="background: transparent; color: #999; border: 1px solid #666; padding: 12px 30px; border-radius: 25px; font-size: 16px; cursor: pointer; font-family: 'Sarabun', sans-serif; width: 100%;">ข้ามไปก่อน</button>
+                    </div>
+                </div>
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 9999;" id="reviewIncentiveOverlay" onclick="closeReviewIncentive()"></div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', popup);
+        }
+
+        function closeReviewIncentive() {
+            const popup = document.getElementById('reviewIncentivePopup');
+            const overlay = document.getElementById('reviewIncentiveOverlay');
+            if (popup) popup.remove();
+            if (overlay) overlay.remove();
+        }
+
+        function openQuickReview() {
+            closeReviewIncentive();
+            showQuickReviewForm();
+        }
+
+        let selectedRating = 0;
+        const reviewTemplates = ['✨ แม่นมาก! ตรงกับสิ่งที่เกิดขึ้นจริง', '🎯 ได้คำตอบที่ต้องการ เข้าใจชีวิตมากขึ้น', '💎 คุ้มค่ามาก จะกลับมาใช้บริการอีก', '⚡ บริการรวดเร็ว คำตอบชัดเจน'];
+
+        function showQuickReviewForm() {
+            const form = `<div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: linear-gradient(135deg, #1a1f3a 0%, #2d1b4e 100%); border: 2px solid #9b59b6; border-radius: 20px; padding: 30px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 0 50px rgba(155, 89, 182, 0.6); z-index: 10000;" id="quickReviewForm"><h2 style="color: #9b59b6; margin: 0 0 20px 0; text-align: center;">⭐ รีวิวด่วน</h2><div style="margin-bottom: 20px;"><label style="color: #fff; display: block; margin-bottom: 10px; font-size: 16px;">คะแนน:</label><div id="starRating" style="text-align: center; margin-bottom: 15px;"><span onclick="setRating(1)" style="font-size: 40px; cursor: pointer; color: #666;">⭐</span><span onclick="setRating(2)" style="font-size: 40px; cursor: pointer; color: #666;">⭐</span><span onclick="setRating(3)" style="font-size: 40px; cursor: pointer; color: #666;">⭐</span><span onclick="setRating(4)" style="font-size: 40px; cursor: pointer; color: #666;">⭐</span><span onclick="setRating(5)" style="font-size: 40px; cursor: pointer; color: #666;">⭐</span></div></div><div style="margin-bottom: 20px;"><label style="color: #fff; display: block; margin-bottom: 10px; font-size: 16px;">เลือกข้อความ หรือเขียนเอง:</label><div style="display: grid; gap: 10px; margin-bottom: 15px;"><button onclick="selectTemplate(0)" class="tpl-btn" style="background: rgba(155, 89, 182, 0.2); border: 2px solid rgba(155, 89, 182, 0.3); color: #fff; padding: 12px; border-radius: 10px; cursor: pointer; font-family: 'Sarabun', sans-serif; text-align: left;">✨ แม่นมาก!</button><button onclick="selectTemplate(1)" class="tpl-btn" style="background: rgba(155, 89, 182, 0.2); border: 2px solid rgba(155, 89, 182, 0.3); color: #fff; padding: 12px; border-radius: 10px; cursor: pointer; font-family: 'Sarabun', sans-serif; text-align: left;">🎯 ได้คำตอบที่ต้องการ</button><button onclick="selectTemplate(2)" class="tpl-btn" style="background: rgba(155, 89, 182, 0.2); border: 2px solid rgba(155, 89, 182, 0.3); color: #fff; padding: 12px; border-radius: 10px; cursor: pointer; font-family: 'Sarabun', sans-serif; text-align: left;">💎 คุ้มค่ามาก</button><button onclick="selectTemplate(3)" class="tpl-btn" style="background: rgba(155, 89, 182, 0.2); border: 2px solid rgba(155, 89, 182, 0.3); color: #fff; padding: 12px; border-radius: 10px; cursor: pointer; font-family: 'Sarabun', sans-serif; text-align: left;">⚡ รวดเร็วชัดเจน</button></div><textarea id="quickReviewText" placeholder="หรือเขียนรีวิวเอง..." style="width: 100%; min-height: 80px; padding: 15px; border-radius: 10px; border: 1px solid rgba(155, 89, 182, 0.3); background: rgba(255, 255, 255, 0.05); color: #fff; font-family: 'Sarabun', sans-serif; font-size: 16px;"></textarea></div><button onclick="submitQuickReview()" style="background: linear-gradient(135deg, #2ecc71, #27ae60); color: white; border: none; padding: 18px; border-radius: 30px; font-size: 18px; font-weight: 700; cursor: pointer; font-family: 'Sarabun', sans-serif; width: 100%; margin-bottom: 10px;">✅ ส่งรีวิว รับโบนัส +1</button><button onclick="closeQuickReview()" style="background: transparent; color: #999; border: 1px solid #666; padding: 12px; border-radius: 25px; font-size: 16px; cursor: pointer; font-family: 'Sarabun', sans-serif; width: 100%;">ยกเลิก</button></div><div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 9999;" id="quickReviewOverlay"></div>`;
+            document.body.insertAdjacentHTML('beforeend', form);
+        }
+
+        function setRating(stars) {
+            selectedRating = stars;
+            const starElements = document.querySelectorAll('#starRating span');
+            starElements.forEach((star, index) => { star.style.color = index < stars ? '#f39c12' : '#666'; });
+        }
+
+        function selectTemplate(index) {
+            document.getElementById('quickReviewText').value = reviewTemplates[index];
+            document.querySelectorAll('.tpl-btn').forEach((btn, i) => {
+                btn.style.background = i === index ? 'rgba(155, 89, 182, 0.5)' : 'rgba(155, 89, 182, 0.2)';
+                btn.style.borderColor = i === index ? '#9b59b6' : 'rgba(155, 89, 182, 0.3)';
+            });
+        }
+
+        async function submitQuickReview() {
+            if (selectedRating === 0) { alert('กรุณาให้คะแนน ⭐'); return; }
+            const feedback = document.getElementById('quickReviewText').value.trim();
+            if (!feedback) { alert('กรุณาเลือกข้อความหรือเขียนรีวิว'); return; }
+
+            try {
+                const response = await fetch('/api/submit-review', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        rating: selectedRating,
+                        package: selectedPackage.type,
+                        topic: selectedTopicName,
+                        feedback: feedback,
+                        helpful: true,
+                        wouldRecommend: selectedRating >= 4
+                    })
+                });
+
+                if (response.ok) {
+                    closeQuickReview();
+                    followUpCount++;
+                    hasEarnedBonus = true;
+                    document.getElementById('followUpCount').textContent = `คำถามติดตามเหลือ: ${followUpCount}`;
+                    saveSession();
+                    addWizardMessage(`🎁 ขอบคุณสำหรับรีวิว! คุณได้รับคำถามติดตามเพิ่ม +1 แล้ว! 🌟\n\nคำถามเหลือทั้งหมด: ${followUpCount} ข้อ`);
+                } else {
+                    alert('เกิดข้อผิดพลาด กรุณาลองใหม่');
+                }
+            } catch (error) {
+                console.error('Error submitting review:', error);
+                alert('เกิดข้อผิดพลาด กรุณาลองใหม่');
+            }
+        }
+
+        function closeQuickReview() {
+            const form = document.getElementById('quickReviewForm');
+            const overlay = document.getElementById('quickReviewOverlay');
+            if (form) form.remove();
+            if (overlay) overlay.remove();
+        }
+
+        function showFinalReviewRequest() {
+            const reminder = `<div style="background: rgba(243, 156, 18, 0.1); border: 2px dashed #f39c12; border-radius: 15px; padding: 20px; text-align: center; margin-top: 20px;"><div style="font-size: 24px; margin-bottom: 10px;">💬</div><p style="color: #fff; margin: 0 0 15px 0;">ช่วยแชร์ประสบการณ์ของคุณเพื่อช่วยคนอื่นได้ไหม? 🙏</p><button onclick="openQuickReview()" style="background: linear-gradient(135deg, #9b59b6, #8e44ad); color: white; border: none; padding: 15px 30px; border-radius: 25px; font-size: 16px; cursor: pointer; font-family: 'Sarabun', sans-serif;">⭐ แชร์ประสบการณ์</button></div>`;
+            document.getElementById('chatMessages').insertAdjacentHTML('beforeend', reminder);
         }
 
         function shareReading() {
