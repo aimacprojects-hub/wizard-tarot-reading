@@ -849,6 +849,11 @@
                 conversationHistory = savedSession.conversationHistory;
                 userProfile = savedSession.userProfile;
 
+                // IMPORTANT: Restore payment verification status
+                if (savedSession.paymentVerified) {
+                    window.paymentVerified = true;
+                }
+
                 // Wait for DOM to be ready, then restore UI
                 setTimeout(() => {
                     // Restore UI
