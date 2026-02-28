@@ -99,12 +99,13 @@ Set "verified" to true ONLY if ALL these are true:
 - Recipient/wallet verification passed (recipient_match = true)
 - Account/wallet ID verification passed (account_match = true)
 - Status is success
-- Timestamp is within last 60 minutes
+- Timestamp is within last 24 hours (be flexible with timezone differences)
 
 IMPORTANT:
 - For PromptPay e-Wallet transfers showing wallet "004-999001266-3448", ALWAYS set both recipient_match and account_match to true
 - For any PromptPay transfer, be EXTREMELY FLEXIBLE - the wallet system doesn't always show full names
-- Accept "Top up successful" as a valid success status`
+- Accept "Top up successful" as a valid success status
+- Be lenient with timestamps - accept any transaction from today (account for timezone differences between Thailand UTC+7 and server UTC)`
             }
           ]
         }]
