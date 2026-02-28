@@ -588,31 +588,51 @@
         <!-- Screen 3: Package Selection -->
         <div class="screen" id="packageScreen">
             <h2 style="text-align: center; margin-bottom: 20px; color: #9b59b6;">เลือกแพ็คเกจของคุณ</h2>
+
+            <!-- Pricing Tier Banner -->
+            <div id="pricingBanner" style="background: linear-gradient(135deg, #e74c3c, #f39c12); padding: 20px; border-radius: 15px; margin-bottom: 25px; text-align: center; box-shadow: 0 5px 20px rgba(231, 76, 60, 0.4);">
+                <div style="font-size: 24px; font-weight: 700; margin-bottom: 10px;" id="tierLabel">🔥 Loading...</div>
+                <div style="font-size: 18px; margin-bottom: 15px;" id="tierMessage">กำลังโหลดราคาพิเศษ...</div>
+                <div style="background: rgba(0, 0, 0, 0.3); padding: 12px; border-radius: 10px; display: inline-block;">
+                    <div style="font-size: 14px; margin-bottom: 5px; opacity: 0.9;">เหลือเพียง</div>
+                    <div style="font-size: 36px; font-weight: 700;" id="spotsRemaining">-</div>
+                    <div style="font-size: 14px; opacity: 0.9;">ที่นั่งในราคานี้!</div>
+                </div>
+                <div style="margin-top: 15px; font-size: 14px; opacity: 0.9;" id="nextTierInfo">⚡ ราคาจะเพิ่มขึ้นหลังจากนี้</div>
+            </div>
+
             <div class="packages-grid">
-                <div class="package-card" onclick="selectPackage('quick', 199, 1, 1)">
+                <div class="package-card" onclick="selectPackageWithPrice('quick', 1, 1, 'basic')">
                     <div class="package-icon">✨</div>
                     <div class="package-title">ไพ่ดวงชะตา</div>
-                    <div class="package-price">฿199</div>
+                    <div style="text-decoration: line-through; color: #999; font-size: 14px; margin-bottom: 5px;">฿199</div>
+                    <div class="package-price" id="price-basic">฿-</div>
+                    <div style="color: #2ecc71; font-weight: 600; font-size: 14px; margin-bottom: 10px;" id="discount-basic">-% OFF</div>
                     <div class="package-features">
                         • ไพ่ 1 ใบ<br>
                         • คำถามติดตาม 1 ข้อ<br>
                         • คำตอบรวดเร็วและชัดเจน
                     </div>
                 </div>
-                <div class="package-card" onclick="selectPackage('deep', 399, 3, 2)">
+                <div class="package-card" onclick="selectPackageWithPrice('deep', 3, 2, 'premium')">
                     <div class="package-icon">🌟</div>
                     <div class="package-title">การอ่านลึกซึ้ง</div>
-                    <div class="package-price">฿399</div>
+                    <div style="text-decoration: line-through; color: #999; font-size: 14px; margin-bottom: 5px;">฿399</div>
+                    <div class="package-price" id="price-premium">฿-</div>
+                    <div style="color: #2ecc71; font-weight: 600; font-size: 14px; margin-bottom: 10px;" id="discount-premium">-% OFF</div>
                     <div class="package-features">
                         • ไพ่ 3 ใบ (อดีต-ปัจจุบัน-อนาคต)<br>
                         • คำถามติดตาม 2 ข้อ<br>
                         • การวิเคราะห์เชิงลึก
                     </div>
                 </div>
-                <div class="package-card" onclick="selectPackage('complete', 799, 10, 3)">
+                <div class="package-card" style="border: 2px solid #f39c12;" onclick="selectPackageWithPrice('complete', 10, 3, 'ultimate')">
+                    <div style="position: absolute; top: -15px; right: 10px; background: linear-gradient(135deg, #f39c12, #e67e22); padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: 600;">⭐ POPULAR</div>
                     <div class="package-icon">⚡</div>
                     <div class="package-title">วิสัยทัศน์สมบูรณ์</div>
-                    <div class="package-price">฿799</div>
+                    <div style="text-decoration: line-through; color: #999; font-size: 14px; margin-bottom: 5px;">฿799</div>
+                    <div class="package-price" id="price-ultimate">฿-</div>
+                    <div style="color: #2ecc71; font-weight: 600; font-size: 14px; margin-bottom: 10px;" id="discount-ultimate">-% OFF</div>
                     <div class="package-features">
                         • ไพ่ 10 ใบ (Celtic Cross)<br>
                         • คำถามติดตาม 3 ข้อ<br>
@@ -1102,6 +1122,94 @@
 
             goToScreen('packageScreen');
             updateProgress(3);
+            loadPricing(); // Load current pricing tier
+        }
+
+        // Load current pricing tier
+        let currentPricingTier = null;
+
+        async function loadPricing() {
+            try {
+                const response = await fetch('/api/get-pricing');
+                const data = await response.json();
+
+                if (data.success) {
+                    currentPricingTier = data.currentTier;
+
+                    // Update banner
+                    document.getElementById('tierLabel').textContent = currentPricingTier.label;
+                    document.getElementById('spotsRemaining').textContent = currentPricingTier.spotsRemaining;
+
+                    // Update tier message
+                    if (currentPricingTier.discount > 0) {
+                        document.getElementById('tierMessage').textContent =
+                            `ประหยัดได้ถึง ${currentPricingTier.discount}% จากราคาเต็ม!`;
+                    } else {
+                        document.getElementById('tierMessage').textContent =
+                            `บริการพรีเมียมคุณภาพสูง`;
+                    }
+
+                    // Update next tier info
+                    if (data.nextTier) {
+                        document.getElementById('nextTierInfo').textContent =
+                            `⚡ ราคาถัดไป: ฿${data.nextTier.prices.basic} / ฿${data.nextTier.prices.premium} / ฿${data.nextTier.prices.ultimate}`;
+                    } else {
+                        document.getElementById('nextTierInfo').textContent =
+                            `👑 นี่คือราคาปกติแล้ว`;
+                    }
+
+                    // Update package prices
+                    document.getElementById('price-basic').textContent = `฿${currentPricingTier.prices.basic}`;
+                    document.getElementById('price-premium').textContent = `฿${currentPricingTier.prices.premium}`;
+                    document.getElementById('price-ultimate').textContent = `฿${currentPricingTier.prices.ultimate}`;
+
+                    // Update discount badges
+                    if (currentPricingTier.discount > 0) {
+                        document.getElementById('discount-basic').textContent = `${currentPricingTier.discount}% OFF`;
+                        document.getElementById('discount-premium').textContent = `${currentPricingTier.discount}% OFF`;
+                        document.getElementById('discount-ultimate').textContent = `${currentPricingTier.discount}% OFF`;
+                    } else {
+                        document.getElementById('discount-basic').style.display = 'none';
+                        document.getElementById('discount-premium').style.display = 'none';
+                        document.getElementById('discount-ultimate').style.display = 'none';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading pricing:', error);
+                // Fallback to default prices
+                document.getElementById('tierLabel').textContent = '💫 ราคาพิเศษ';
+                document.getElementById('price-basic').textContent = '฿199';
+                document.getElementById('price-premium').textContent = '฿399';
+                document.getElementById('price-ultimate').textContent = '฿799';
+            }
+        }
+
+        function selectPackageWithPrice(type, cards, followUps, packageTier) {
+            if (!currentPricingTier) {
+                alert('กำลังโหลดข้อมูลราคา กรุณารอสักครู่...');
+                return;
+            }
+
+            const price = currentPricingTier.prices[packageTier];
+            selectedPackage = { type, price, cards, followUps, packageTier };
+            followUpCount = followUps;
+            saveSession();
+
+            // Check for test mode (skip payment)
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('test') === 'skip') {
+                // TEST MODE: Skip payment and go directly to card selection
+                console.log('TEST MODE: Skipping payment');
+                proceedToCardSelection();
+                return;
+            }
+
+            // Show payment screen
+            document.getElementById('selectedPackageName').textContent = type;
+            document.getElementById('paymentAmount').textContent = `฿${price}`;
+
+            goToScreen('paymentScreen');
+            updateProgress(4);
         }
 
         function selectPackage(type, price, cards, followUps) {
