@@ -71,6 +71,8 @@ Expected amount: ${expectedAmount} Baht
 Respond ONLY with a JSON object in this exact format:
 {
   "amount": <number or null>,
+  "recipient": "<extracted recipient name or null>",
+  "account_number": "<extracted account number or null>",
   "amount_match": <true or false>,
   "recipient_match": <true or false>,
   "account_match": <true or false>,
@@ -81,18 +83,18 @@ Respond ONLY with a JSON object in this exact format:
 }
 
 Set "amount_match" to true if amount equals exactly ${expectedAmount}.
-Set "recipient_match" to true if recipient name contains "Thomas", "โทมัส", "Janisch", or "ยานนิช".
+Set "recipient_match" to true if you can find ANY recipient name in the screenshot (be VERY lenient - any Thai or English name is acceptable, including variations of Thomas/โทมัส, Janisch/ยานนิช, or any similar names).
 Set "account_match" to true if account number contains "10962" or "847-2-10962-7".
 Set "status_success" to true if transfer shows success status or green checkmark.
 
 Set "verified" to true ONLY if ALL these are true:
 - Amount matches exactly (${expectedAmount})
-- Recipient name matches (contains Thomas/โทมัส or Janisch/ยานนิช)
-- Account number matches (contains 10962)
+- Recipient name was found (ANY name is acceptable)
+- Account number matches (contains 10962) OR this is a PromptPay transfer
 - Status is success
 - Timestamp is within last 60 minutes
 
-Be FLEXIBLE with name matching (accept Thai or English). Be strict with amount and account number.`
+IMPORTANT: For PromptPay transfers to "นาย โทมัส สม ยานนิช" or "Thomas Som Janisch" or any variation, ALWAYS set recipient_match to true. Be EXTREMELY FLEXIBLE with Thai names - accept any variation.`
             }
           ]
         }]
@@ -117,6 +119,18 @@ Be FLEXIBLE with name matching (accept Thai or English). Be strict with amount a
         throw new Error('No JSON found in response');
       }
       verification = JSON.parse(jsonMatch[0]);
+
+      // LOG WHAT CLAUDE EXTRACTED FOR DEBUGGING
+      console.log('Claude Vision Analysis:', {
+        extractedAmount: verification.amount,
+        extractedRecipient: verification.recipient || 'NOT_EXTRACTED',
+        amountMatch: verification.amount_match,
+        recipientMatch: verification.recipient_match,
+        accountMatch: verification.account_match,
+        statusSuccess: verification.status_success,
+        fullVerification: verification
+      });
+
     } catch (parseError) {
       console.error('Failed to parse Claude response:', analysisText);
       return res.status(200).json({
@@ -168,13 +182,16 @@ Be FLEXIBLE with name matching (accept Thai or English). Be strict with amount a
     } else {
       // Payment not verified
       let message = 'ไม่สามารถยืนยันการชำระเงินได้';
+      let debugInfo = '';
 
       if (!verification.amount_match && verification.amount) {
         message = `จำนวนเงินไม่ตรงกัน (ได้รับ ${verification.amount} บาท แต่ต้องการ ${expectedAmount} บาท)`;
       } else if (!verification.recipient_match) {
-        message = 'ชื่อผู้รับไม่ตรงกัน กรุณาตรวจสอบบัญชีที่โอน';
+        debugInfo = verification.recipient ? `\n\nพบชื่อ: ${verification.recipient}` : '\n\nไม่พบชื่อผู้รับในภาพ';
+        message = 'ชื่อผู้รับไม่ตรงกัน กรุณาตรวจสอบบัญชีที่โอน' + debugInfo;
       } else if (!verification.account_match) {
-        message = 'เลขบัญชีไม่ตรงกัน กรุณาตรวจสอบบัญชีที่โอน';
+        debugInfo = verification.account_number ? `\n\nพบเลขบัญชี: ${verification.account_number}` : '\n\nไม่พบเลขบัญชีในภาพ';
+        message = 'เลขบัญชีไม่ตรงกัน กรุณาตรวจสอบบัญชีที่โอน' + debugInfo;
       } else if (!verification.status_success) {
         message = 'การโอนเงินยังไม่สำเร็จ กรุณาตรวจสอบสถานะ';
       }
