@@ -71,6 +71,7 @@ Expected amount: ${expectedAmount} Baht
 Respond ONLY with a JSON object in this exact format:
 {
   "amount": <number or null>,
+  "amount_match": <true or false>,
   "recipient_match": <true or false>,
   "account_match": <true or false>,
   "status_success": <true or false>,
@@ -79,12 +80,13 @@ Respond ONLY with a JSON object in this exact format:
   "verified": <true or false>
 }
 
-Set "verified" to true ONLY if:
+Set "amount_match" to true ONLY if amount equals exactly ${expectedAmount}.
+Set "verified" to true ONLY if ALL these are true:
 - Amount matches exactly (${expectedAmount})
-- Recipient name matches
-- Account number matches
+- Recipient name matches (Thomas Som Janisch)
+- Account number matches (847-2-10962-7)
 - Status is success
-- Timestamp is within last 30 minutes
+- Timestamp is within last 60 minutes
 
 Be strict in verification. If any field is unclear or doesn't match, set verified to false.`
             }
