@@ -889,6 +889,15 @@
 
         // Restore session on page load
         window.addEventListener('DOMContentLoaded', () => {
+            // Check for fresh start parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('fresh') === 'true') {
+                console.log('🆕 Fresh start requested - clearing session');
+                localStorage.removeItem('tarotSession');
+                window.location.href = window.location.pathname; // Remove URL params
+                return;
+            }
+
             const savedSession = loadSession();
             console.log('📂 Loading session:', savedSession ? { currentScreen: savedSession.currentScreen, paymentVerified: savedSession.paymentVerified } : 'No session');
             if (savedSession && savedSession.currentScreen !== 'topicScreen') {
