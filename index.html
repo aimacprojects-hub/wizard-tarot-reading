@@ -856,6 +856,12 @@
 
                 // Wait for DOM to be ready, then restore UI
                 setTimeout(() => {
+                    // Restore payment screen UI elements if package was selected
+                    if (selectedPackage && selectedPackage.type) {
+                        document.getElementById('selectedPackageName').textContent = selectedPackage.type;
+                        document.getElementById('paymentAmount').textContent = `฿${selectedPackage.price}`;
+                    }
+
                     // Restore UI
                     goToScreen(currentScreen);
 
@@ -864,8 +870,9 @@
                         'topicScreen': 1,
                         'questionScreen': 2,
                         'packageScreen': 3,
-                        'cardScreen': 4,
-                        'chatScreen': 5
+                        'paymentScreen': 4,
+                        'cardScreen': 5,
+                        'chatScreen': 6
                     };
                     updateProgress(progressMap[currentScreen] || 1);
 
