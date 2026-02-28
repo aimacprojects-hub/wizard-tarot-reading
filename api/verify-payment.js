@@ -60,8 +60,8 @@ export default async function handler(req, res) {
               text: `You are a payment verification AI. Analyze this Thai bank transfer screenshot and extract the following information:
 
 1. Transfer amount (in Thai Baht)
-2. Recipient name (should match ANY of these: "Thomas Som Janisch", "Mr. Thomas Som Janisch", "นาย โทมัส สม ยานนิช", "โทมัส สม ยานนิช", or similar variations in Thai/English)
-3. Bank account number (should match: 847-2-10962-7 or contain 10962)
+2. Recipient name OR wallet information (should match: "Thomas Som Janisch", "Mr. Thomas Som Janisch", "นาย โทมัส สม ยานนิช", "โทมัส สม ยานนิช", or PromptPay wallet "004-999001266-3448")
+3. Bank account number OR wallet ID (should match: 847-2-10962-7, contain 10962, OR wallet 004-999001266-3448)
 4. Transfer status (should be สำเร็จ, Success, completed, or show a green checkmark)
 5. Transfer date and time
 6. Transaction reference/ID
@@ -83,18 +83,28 @@ Respond ONLY with a JSON object in this exact format:
 }
 
 Set "amount_match" to true if amount equals exactly ${expectedAmount}.
-Set "recipient_match" to true if you can find ANY recipient name in the screenshot (be VERY lenient - any Thai or English name is acceptable, including variations of Thomas/โทมัส, Janisch/ยานนิช, or any similar names).
-Set "account_match" to true if account number contains "10962" or "847-2-10962-7".
+Set "recipient_match" to true if ANY of these conditions are met:
+  - You find recipient name containing Thomas/โทมัส or Janisch/ยานนิช
+  - This is a PromptPay e-Wallet transfer
+  - This is a PromptPay transfer showing wallet ID 004-999001266-3448
+  - Any Thai or English name is shown
+Set "account_match" to true if ANY of these match:
+  - Account number contains "10962" or "847-2-10962-7"
+  - PromptPay wallet ID is "004-999001266-3448"
+  - This is labeled as "PromptPay e-Wallet"
 Set "status_success" to true if transfer shows success status or green checkmark.
 
 Set "verified" to true ONLY if ALL these are true:
 - Amount matches exactly (${expectedAmount})
-- Recipient name was found (ANY name is acceptable)
-- Account number matches (contains 10962) OR this is a PromptPay transfer
+- Recipient/wallet verification passed (recipient_match = true)
+- Account/wallet ID verification passed (account_match = true)
 - Status is success
 - Timestamp is within last 60 minutes
 
-IMPORTANT: For PromptPay transfers to "นาย โทมัส สม ยานนิช" or "Thomas Som Janisch" or any variation, ALWAYS set recipient_match to true. Be EXTREMELY FLEXIBLE with Thai names - accept any variation.`
+IMPORTANT:
+- For PromptPay e-Wallet transfers showing wallet "004-999001266-3448", ALWAYS set both recipient_match and account_match to true
+- For any PromptPay transfer, be EXTREMELY FLEXIBLE - the wallet system doesn't always show full names
+- Accept "Top up successful" as a valid success status`
             }
           ]
         }]
