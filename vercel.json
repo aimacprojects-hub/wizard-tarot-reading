@@ -3,15 +3,5 @@
     "api/**/*.js": {
       "maxDuration": 60
     }
-  },
-  "rewrites": [
-    {
-      "source": "/admin-payments",
-      "destination": "/admin-payments.html"
-    },
-    {
-      "source": "/admin-reviews",
-      "destination": "/admin-reviews.html"
-    }
-  ]
+  }
 }
