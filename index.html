@@ -1513,7 +1513,7 @@
                 totalFollowUpsUsed++;
                 saveSession(); // Save after follow-up answer
 
-                // Show review incentive after FIRST follow-up answer (wait 30 seconds)
+                // Show review incentive after FIRST follow-up answer (wait 20 seconds)
                 // Show even if followUpCount = 0 (for Basic package with only 1 follow-up)
                 if (!reviewIncentiveShown && totalFollowUpsUsed === 1) {
                     reviewIncentiveShown = true;
@@ -1522,7 +1522,7 @@
                         if (!hasEarnedBonus) {
                             showReviewIncentive();
                         }
-                    }, 30000); // 30 seconds delay
+                    }, 20000); // 20 seconds delay
                 }
 
                 if (followUpCount === 0) {
