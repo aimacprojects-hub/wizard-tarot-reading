@@ -1514,22 +1514,27 @@
                 saveSession(); // Save after follow-up answer
 
                 // Show review incentive after FIRST follow-up answer (wait 30 seconds)
-                if (!reviewIncentiveShown && totalFollowUpsUsed === 1 && followUpCount > 0) {
+                // Show even if followUpCount = 0 (for Basic package with only 1 follow-up)
+                if (!reviewIncentiveShown && totalFollowUpsUsed === 1) {
                     reviewIncentiveShown = true;
                     setTimeout(() => {
-                        showReviewIncentive();
+                        // Only show if they haven't earned bonus yet
+                        if (!hasEarnedBonus) {
+                            showReviewIncentive();
+                        }
                     }, 30000); // 30 seconds delay
                 }
 
                 if (followUpCount === 0) {
                     setTimeout(() => {
-                        // If they haven't reviewed yet, remind them
-                        if (!hasEarnedBonus) {
+                        // If they haven't reviewed yet AND incentive popup won't appear, show final request
+                        // Don't show if totalFollowUpsUsed === 1 (incentive popup will show instead)
+                        if (!hasEarnedBonus && totalFollowUpsUsed !== 1) {
                             addWizardMessage(`คุณได้ใช้คำถามติดตามครบแล้ว! 🌟\n\n💬 ช่วยเราหน่อยได้ไหม? แชร์ประสบการณ์ของคุณเพื่อช่วยคนอื่น 🙏`);
                             setTimeout(() => {
                                 showFinalReviewRequest();
                             }, 1000);
-                        } else {
+                        } else if (hasEarnedBonus || totalFollowUpsUsed === 1) {
                             addWizardMessage(`คุณได้ใช้คำถามติดตามครบแล้ว! 🌟 ขอให้โชคดีในเส้นทางชีวิตของคุณ! 💫✨`);
                         }
                         document.getElementById('followUpInput').disabled = true;
