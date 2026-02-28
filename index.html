@@ -794,6 +794,7 @@
                 paymentVerified: window.paymentVerified || false,
                 timestamp: Date.now()
             };
+            console.log('💾 Saving session:', { currentScreen, paymentVerified: window.paymentVerified });
             localStorage.setItem('tarotSession', JSON.stringify(sessionData));
         }
 
@@ -837,6 +838,7 @@
         // Restore session on page load
         window.addEventListener('DOMContentLoaded', () => {
             const savedSession = loadSession();
+            console.log('📂 Loading session:', savedSession ? { currentScreen: savedSession.currentScreen, paymentVerified: savedSession.paymentVerified } : 'No session');
             if (savedSession && savedSession.currentScreen !== 'topicScreen') {
                 // AUTO-RESTORE SESSION (no confirmation needed - customer protection!)
                 // Restore all state
@@ -854,6 +856,8 @@
                 if (savedSession.paymentVerified) {
                     window.paymentVerified = true;
                 }
+
+                console.log('✅ Restored to screen:', currentScreen, 'Payment verified:', window.paymentVerified);
 
                 // Wait for DOM to be ready, then restore UI
                 setTimeout(() => {
