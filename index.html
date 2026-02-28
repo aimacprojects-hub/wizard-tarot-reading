@@ -485,6 +485,13 @@
         <!-- Screen 1: Topic Selection -->
         <div class="screen active" id="topicScreen">
             <h2 style="text-align: center; margin-bottom: 20px; color: #9b59b6;">เลือกหัวข้อที่คุณต้องการถาม</h2>
+
+            <!-- Clear old session button (only shows if old unpaid session exists) -->
+            <div id="clearSessionNotice" style="display: none; background: rgba(231, 76, 60, 0.1); border: 1px solid #e74c3c; border-radius: 10px; padding: 15px; margin-bottom: 20px; text-align: center;">
+                <p style="color: #e74c3c; margin: 0 0 10px 0; font-size: 14px;">⚠️ พบข้อมูลเก่าในเบราว์เซอร์</p>
+                <button onclick="clearOldSession()" style="background: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-family: 'Sarabun', sans-serif; font-size: 14px;">🗑️ ล้างข้อมูลเก่า เริ่มใหม่</button>
+            </div>
+
             <div class="topics-grid">
                 <div class="topic-card" onclick="selectTopic('love', '💖 ความรักและความสัมพันธ์')">
                     <div class="topic-icon">💖</div>
@@ -1028,8 +1035,20 @@
                         document.head.appendChild(style);
                     }
                 }, 100);
+            } else {
+                // No paid session to restore, check if there's an old unpaid session
+                const oldSession = loadSession();
+                if (oldSession && !oldSession.paymentVerified) {
+                    // Show clear session button
+                    document.getElementById('clearSessionNotice').style.display = 'block';
+                }
             }
         });
+
+        function clearOldSession() {
+            localStorage.removeItem('tarotSession');
+            window.location.reload();
+        }
 
         const suggestions = {
             love: [
