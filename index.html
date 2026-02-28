@@ -450,6 +450,7 @@
             <div class="progress-step" id="step3">3</div>
             <div class="progress-step" id="step4">4</div>
             <div class="progress-step" id="step5">5</div>
+            <div class="progress-step" id="step6">6</div>
         </div>
 
         <!-- Screen 1: Topic Selection -->
@@ -1886,13 +1887,15 @@
                 'topicScreen': 1,
                 'questionScreen': 2,
                 'packageScreen': 3,
-                'cardScreen': 4
+                'paymentScreen': 4,
+                'cardScreen': 5,
+                'chatScreen': 6
             };
             updateProgress(stepMap[screenId]);
         }
 
         function updateProgress(step) {
-            for (let i = 1; i <= 5; i++) {
+            for (let i = 1; i <= 6; i++) {
                 const stepEl = document.getElementById(`step${i}`);
                 if (i <= step) {
                     stepEl.classList.add('active');
