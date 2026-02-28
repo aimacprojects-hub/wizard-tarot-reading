@@ -877,6 +877,11 @@
                     };
                     updateProgress(progressMap[currentScreen] || 1);
 
+                    // Restore card screen if needed
+                    if (currentScreen === 'cardScreen' && selectedPackage.cards) {
+                        initializeCards(selectedPackage.cards);
+                    }
+
                     if (currentScreen === 'chatScreen') {
                         // Rebuild chat history
                         const chatDiv = document.getElementById('chatMessages');
