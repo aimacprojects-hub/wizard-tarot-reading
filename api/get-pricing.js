@@ -28,7 +28,7 @@ export default async function handler(req, res) {
       }
     }
 
-    // Define pricing tiers
+    // Define pricing tiers (NEW FINAL PRICES: ฿99/199/399)
     const tiers = [
       {
         name: 'Tier 1: LAUNCH SPECIAL',
@@ -36,9 +36,9 @@ export default async function handler(req, res) {
         minSales: 0,
         maxSales: 29,
         prices: {
-          basic: 40,
-          premium: 80,
-          ultimate: 160
+          basic: 20,
+          premium: 40,
+          ultimate: 80
         },
         label: '🔥 LAUNCH WEEK - 80% OFF',
         urgency: 'EXTREME'
@@ -49,9 +49,9 @@ export default async function handler(req, res) {
         minSales: 30,
         maxSales: 79,
         prices: {
-          basic: 60,
-          premium: 120,
-          ultimate: 240
+          basic: 30,
+          premium: 60,
+          ultimate: 120
         },
         label: '⚡ EARLY BIRD - 70% OFF',
         urgency: 'HIGH'
@@ -62,9 +62,9 @@ export default async function handler(req, res) {
         minSales: 80,
         maxSales: 129,
         prices: {
-          basic: 100,
-          premium: 200,
-          ultimate: 400
+          basic: 50,
+          premium: 100,
+          ultimate: 200
         },
         label: '💎 HALF PRICE - 50% OFF',
         urgency: 'MEDIUM'
@@ -75,9 +75,9 @@ export default async function handler(req, res) {
         minSales: 130,
         maxSales: 199,
         prices: {
-          basic: 140,
-          premium: 280,
-          ultimate: 560
+          basic: 70,
+          premium: 140,
+          ultimate: 280
         },
         label: '🌟 SPECIAL - 30% OFF',
         urgency: 'LOW'
@@ -88,9 +88,9 @@ export default async function handler(req, res) {
         minSales: 200,
         maxSales: 299,
         prices: {
-          basic: 170,
-          premium: 340,
-          ultimate: 680
+          basic: 85,
+          premium: 170,
+          ultimate: 340
         },
         label: '✨ FINAL DISCOUNT - 15% OFF',
         urgency: 'LOW'
@@ -101,9 +101,9 @@ export default async function handler(req, res) {
         minSales: 300,
         maxSales: 999999,
         prices: {
-          basic: 199,
-          premium: 399,
-          ultimate: 799
+          basic: 99,
+          premium: 199,
+          ultimate: 399
         },
         label: '👑 PREMIUM SERVICE',
         urgency: 'NONE'

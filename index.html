@@ -613,7 +613,7 @@
                 <div class="package-card" onclick="selectPackageWithPrice('quick', 1, 1, 'basic')">
                     <div class="package-icon">✨</div>
                     <div class="package-title">ไพ่ดวงชะตา</div>
-                    <div style="text-decoration: line-through; color: #999; font-size: 14px; margin-bottom: 5px;">฿199</div>
+                    <div style="text-decoration: line-through; color: #999; font-size: 14px; margin-bottom: 5px;">฿99</div>
                     <div class="package-price" id="price-basic">฿-</div>
                     <div style="color: #2ecc71; font-weight: 600; font-size: 14px; margin-bottom: 10px;" id="discount-basic">-% OFF</div>
                     <div class="package-features">
@@ -625,7 +625,7 @@
                 <div class="package-card" onclick="selectPackageWithPrice('deep', 3, 2, 'premium')">
                     <div class="package-icon">🌟</div>
                     <div class="package-title">การอ่านลึกซึ้ง</div>
-                    <div style="text-decoration: line-through; color: #999; font-size: 14px; margin-bottom: 5px;">฿399</div>
+                    <div style="text-decoration: line-through; color: #999; font-size: 14px; margin-bottom: 5px;">฿199</div>
                     <div class="package-price" id="price-premium">฿-</div>
                     <div style="color: #2ecc71; font-weight: 600; font-size: 14px; margin-bottom: 10px;" id="discount-premium">-% OFF</div>
                     <div class="package-features">
@@ -638,7 +638,7 @@
                     <div style="position: absolute; top: -15px; right: 10px; background: linear-gradient(135deg, #f39c12, #e67e22); padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: 600;">⭐ POPULAR</div>
                     <div class="package-icon">⚡</div>
                     <div class="package-title">วิสัยทัศน์สมบูรณ์</div>
-                    <div style="text-decoration: line-through; color: #999; font-size: 14px; margin-bottom: 5px;">฿799</div>
+                    <div style="text-decoration: line-through; color: #999; font-size: 14px; margin-bottom: 5px;">฿399</div>
                     <div class="package-price" id="price-ultimate">฿-</div>
                     <div style="color: #2ecc71; font-weight: 600; font-size: 14px; margin-bottom: 10px;" id="discount-ultimate">-% OFF</div>
                     <div class="package-features">
@@ -1209,11 +1209,11 @@
                 }
             } catch (error) {
                 console.error('Error loading pricing:', error);
-                // Fallback to default prices
+                // Fallback to NEW default prices
                 document.getElementById('tierLabel').textContent = '💫 ราคาพิเศษ';
-                document.getElementById('price-basic').textContent = '฿199';
-                document.getElementById('price-premium').textContent = '฿399';
-                document.getElementById('price-ultimate').textContent = '฿799';
+                document.getElementById('price-basic').textContent = '฿99';
+                document.getElementById('price-premium').textContent = '฿199';
+                document.getElementById('price-ultimate').textContent = '฿399';
             }
         }
 
