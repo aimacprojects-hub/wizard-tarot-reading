@@ -207,7 +207,7 @@ Customer Details:`;
 EXAMPLES of correct card format:
 ✅ "The Fool (ไพ่คนโง่เขลา)"
 ✅ "The Lovers (ไพ่คนรัก)"
-✅ "Death (ไพ่ความตาย)"
+✅ "Death (ไพ่แห่งการเปลี่ยนแปลง)"
 ✅ "Strength (ไพ่ความแข็งแกร่ง)"
 ✅ "The Devil (ไพ่ปีศาจ)"
 ✅ "The Hierophant (ไพ่นักบวช)"
