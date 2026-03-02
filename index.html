@@ -429,21 +429,21 @@
         /* Card Drawing - Semi-Circle Arc Layout */
         .card-deck {
             position: relative;
-            height: 350px;
-            margin: 60px auto;
-            max-width: 600px;
+            height: 200px;
+            margin: 30px auto 20px;
+            max-width: 500px;
         }
 
         .tarot-card {
-            width: 100px;
-            height: 160px;
+            width: 80px;
+            height: 120px;
             background: linear-gradient(135deg, #2d1b4e, #1a1f3a);
             border: 3px solid #9b59b6;
-            border-radius: 10px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 50px;
+            font-size: 40px;
             cursor: pointer;
             transition: all 0.3s;
             position: absolute;
@@ -467,14 +467,14 @@
 
             /* Smaller arc for mobile */
             .card-deck {
-                height: 280px;
-                max-width: 400px;
+                height: 160px;
+                max-width: 380px;
             }
 
             .tarot-card {
-                width: 70px;
-                height: 110px;
-                font-size: 35px;
+                width: 65px;
+                height: 100px;
+                font-size: 30px;
             }
         }
 
@@ -1775,12 +1775,12 @@
             selectedCards = [];
 
             const totalCards = 10;
-            // Responsive radius
+            // Responsive radius - smaller for better fit
             const isMobile = window.innerWidth <= 768;
-            const radius = isMobile ? 180 : 250;
-            const cardWidth = isMobile ? 35 : 50; // half of card width
-            const arcAngle = 140; // total arc spread in degrees
-            const startAngle = -70; // start from left
+            const radius = isMobile ? 140 : 180;
+            const cardWidth = isMobile ? 35 : 40; // half of card width
+            const arcAngle = 130; // total arc spread in degrees
+            const startAngle = -65; // start from left
 
             for (let i = 0; i < totalCards; i++) {
                 const card = document.createElement('div');
@@ -1806,10 +1806,10 @@
         function shuffleCards() {
             const cards = document.querySelectorAll('.tarot-card');
             cards.forEach((card, i) => {
-                // Get original rotation from position
+                // Get original rotation from position - match initializeCards
                 const totalCards = 10;
-                const arcAngle = 140;
-                const startAngle = -70;
+                const arcAngle = 130;
+                const startAngle = -65;
                 const angle = startAngle + (arcAngle / (totalCards - 1)) * i;
 
                 // Flip card while maintaining position rotation
