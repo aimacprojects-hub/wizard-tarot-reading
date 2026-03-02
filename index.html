@@ -1299,8 +1299,7 @@
         let conversationHistory = [];
         let userProfile = {
             ageRange: '',
-            gender: '',
-            emotionalState: ''
+            gender: ''
         };
         let reviewIncentiveShown = false;
         let hasEarnedBonus = false;
@@ -1561,7 +1560,6 @@
             // Capture personalization data
             userProfile.ageRange = document.getElementById('ageRange').value;
             userProfile.gender = document.getElementById('gender').value;
-            userProfile.emotionalState = document.getElementById('emotionalState').value;
             // Don't save session yet - only save after payment
 
             goToScreen('packageScreen');
