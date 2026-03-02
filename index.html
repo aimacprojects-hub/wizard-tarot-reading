@@ -973,31 +973,40 @@
             </div>
 
             <div class="packages-grid">
-                <div class="package-card" onclick="selectPackageWithPrice('quick', 1, 1, 'basic')">
+                <div class="package-card" onclick="selectPackageWithPrice('quick', 1, 1, 'basic', 20)">
                     <div class="package-icon">✨</div>
                     <div class="package-title">ไพ่แห่งแสงนำทาง</div>
-                    <div class="package-price">฿99</div>
+                    <div class="package-price">
+                        <span style="text-decoration: line-through; opacity: 0.6; font-size: 20px;">฿99</span>
+                        <span style="color: #2ecc71; font-size: 32px; font-weight: 700; margin-left: 8px;">฿20</span>
+                    </div>
                     <div class="package-features">
                         • ไพ่ 1 ใบ<br>
                         • คำถามติดตาม 1 ข้อ<br>
                         • คำตอบรวดเร็วและชัดเจน
                     </div>
                 </div>
-                <div class="package-card" onclick="selectPackageWithPrice('deep', 3, 2, 'premium')">
+                <div class="package-card" onclick="selectPackageWithPrice('deep', 3, 2, 'premium', 40)">
                     <div class="package-icon">🌟</div>
                     <div class="package-title">ไพ่แห่งแสงสว่าง</div>
-                    <div class="package-price">฿199</div>
+                    <div class="package-price">
+                        <span style="text-decoration: line-through; opacity: 0.6; font-size: 20px;">฿199</span>
+                        <span style="color: #2ecc71; font-size: 32px; font-weight: 700; margin-left: 8px;">฿40</span>
+                    </div>
                     <div class="package-features">
                         • ไพ่ 3 ใบ (อดีต-ปัจจุบัน-อนาคต)<br>
                         • คำถามติดตาม 2 ข้อ<br>
                         • การวิเคราะห์เชิงลึก
                     </div>
                 </div>
-                <div class="package-card" style="border: 2px solid #f39c12;" onclick="selectPackageWithPrice('complete', 10, 3, 'ultimate')">
+                <div class="package-card" style="border: 2px solid #f39c12;" onclick="selectPackageWithPrice('complete', 10, 3, 'ultimate', 60)">
                     <div style="position: absolute; top: -15px; right: 10px; background: linear-gradient(135deg, #f39c12, #e67e22); padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: 600;">⭐ POPULAR</div>
                     <div class="package-icon">⚡</div>
                     <div class="package-title">ไพ่แห่งความจริง</div>
-                    <div class="package-price">฿299</div>
+                    <div class="package-price">
+                        <span style="text-decoration: line-through; opacity: 0.6; font-size: 20px;">฿299</span>
+                        <span style="color: #2ecc71; font-size: 32px; font-weight: 700; margin-left: 8px;">฿60</span>
+                    </div>
                     <div class="package-features">
                         • ไพ่ 10 ใบ (Celtic Cross)<br>
                         • คำถามติดตาม 3 ข้อ<br>
@@ -1666,13 +1675,14 @@
             }
         }
 
-        function selectPackageWithPrice(type, cards, followUps, packageTier) {
+        function selectPackageWithPrice(type, cards, followUps, packageTier, discountedPrice) {
             if (!currentPricingTier) {
                 alert('กำลังโหลดข้อมูลราคา กรุณารอสักครู่...');
                 return;
             }
 
-            const price = currentPricingTier.prices[packageTier];
+            // Use discounted price if provided, otherwise fall back to original pricing
+            const price = discountedPrice || currentPricingTier.prices[packageTier];
             selectedPackage = { type, price, cards, followUps, packageTier };
             followUpCount = followUps;
             // Don't save session yet - only save after payment
