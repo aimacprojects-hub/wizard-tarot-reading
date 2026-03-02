@@ -1298,11 +1298,11 @@
             <div style="text-align: center; margin-bottom: 20px;">
                 <div style="font-size: 14px; color: #ccc; margin-bottom: 10px;">แตะเพื่อให้คะแนน (1-5 ดาว)</div>
                 <div id="starRating" style="font-size: 40px; cursor: pointer; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent;">
-                    <span class="star" onclick="setRating(1)" ontouchstart="setRating(1)" data-rating="1" style="color: #666; transition: color 0.2s; padding: 0 5px; display: inline-block; cursor: pointer;">☆</span>
-                    <span class="star" onclick="setRating(2)" ontouchstart="setRating(2)" data-rating="2" style="color: #666; transition: color 0.2s; padding: 0 5px; display: inline-block; cursor: pointer;">☆</span>
-                    <span class="star" onclick="setRating(3)" ontouchstart="setRating(3)" data-rating="3" style="color: #666; transition: color 0.2s; padding: 0 5px; display: inline-block; cursor: pointer;">☆</span>
-                    <span class="star" onclick="setRating(4)" ontouchstart="setRating(4)" data-rating="4" style="color: #666; transition: color 0.2s; padding: 0 5px; display: inline-block; cursor: pointer;">☆</span>
-                    <span class="star" onclick="setRating(5)" ontouchstart="setRating(5)" data-rating="5" style="color: #666; transition: color 0.2s; padding: 0 5px; display: inline-block; cursor: pointer;">☆</span>
+                    <span class="star" onclick="setRating(1); return false;" ontouchstart="event.preventDefault(); setRating(1); return false;" data-rating="1" style="color: #666; transition: color 0.2s; padding: 0 8px; display: inline-block; cursor: pointer; touch-action: manipulation;">☆</span>
+                    <span class="star" onclick="setRating(2); return false;" ontouchstart="event.preventDefault(); setRating(2); return false;" data-rating="2" style="color: #666; transition: color 0.2s; padding: 0 8px; display: inline-block; cursor: pointer; touch-action: manipulation;">☆</span>
+                    <span class="star" onclick="setRating(3); return false;" ontouchstart="event.preventDefault(); setRating(3); return false;" data-rating="3" style="color: #666; transition: color 0.2s; padding: 0 8px; display: inline-block; cursor: pointer; touch-action: manipulation;">☆</span>
+                    <span class="star" onclick="setRating(4); return false;" ontouchstart="event.preventDefault(); setRating(4); return false;" data-rating="4" style="color: #666; transition: color 0.2s; padding: 0 8px; display: inline-block; cursor: pointer; touch-action: manipulation;">☆</span>
+                    <span class="star" onclick="setRating(5); return false;" ontouchstart="event.preventDefault(); setRating(5); return false;" data-rating="5" style="color: #666; transition: color 0.2s; padding: 0 8px; display: inline-block; cursor: pointer; touch-action: manipulation;">☆</span>
                 </div>
                 <div id="ratingText" style="color: #f39c12; margin-top: 10px; font-size: 14px; min-height: 20px;"></div>
             </div>
@@ -2524,8 +2524,11 @@
 
         // Simple function to set rating (called by inline onclick/ontouchstart)
         function setRating(rating) {
+            console.log('setRating called with:', rating);
             selectedRating = rating;
+            console.log('selectedRating now:', selectedRating);
             updateStars();
+            console.log('updateStars called');
         }
 
         function showReviewModal() {
