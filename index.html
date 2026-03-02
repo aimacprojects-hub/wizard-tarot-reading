@@ -2236,16 +2236,26 @@
             // Full text with branding
             const fullText = `${readingText}━━━━━━━━━━━━━━━━\n🔮 The Wizard of Destiny Tales\nwizard-interactive-v2.vercel.app`;
 
-            // Copy to clipboard
+            // Copy to clipboard silently (for WhatsApp - will be truncated but available in clipboard)
             if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(fullText).then(() => {
-                    // Show success alert
-                    alert('✅ คัดลอกสำเร็จ!\n\nคำทำนายเต็มถูกคัดลอกแล้ว\nเปิด WhatsApp/LINE แล้วกดวาง (Paste) เพื่อแชร์');
-                }).catch(err => {
-                    alert('❌ ไม่สามารถคัดลอกได้\n\nกรุณาลองอีกครั้ง');
+                navigator.clipboard.writeText(fullText).catch(err => {
+                    console.log('Clipboard copy failed:', err);
+                });
+            }
+
+            // Show share dialog (works for all apps - Telegram gets full text, WhatsApp gets truncated)
+            if (navigator.share) {
+                navigator.share({
+                    text: fullText
+                }).then(() => {
+                    console.log('Shared successfully');
+                }).catch((error) => {
+                    console.log('Share failed:', error);
+                    // If share fails, show fallback
+                    fallbackShare(fullText);
                 });
             } else {
-                // Fallback: show the text in a modal to copy manually
+                // Fallback for desktop
                 fallbackShare(fullText);
             }
         }
