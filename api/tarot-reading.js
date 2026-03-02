@@ -195,7 +195,7 @@ Customer Details:`;
 
 [Reveal 1-${cardCount} tarot card(s) - ALWAYS show both English and Thai names like "The Fool (ไพ่คนโง่)" or "Death (ไพ่ความตาย)" - use real tarot card names and meanings relevant to their question]
 
-💫 **นิทานโชคชะตา:**
+💫 **นิทานแห่งดวงชะตา:**
 
 [Tell an immersive 2-3 paragraph fairy tale that metaphorically addresses their question, using imagery of stars, journeys, transformations]
 
