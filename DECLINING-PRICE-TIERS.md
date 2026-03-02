@@ -13,8 +13,8 @@
 **Duration:** Launch Week (3-7 days)
 **Pricing:**
 - Basic (1 card + 1 follow-up): ฿99 → **฿20**
-- Premium (3 cards + 2 follow-ups): ฿199 → **฿40**
-- Ultimate (10 cards + 3 follow-ups): ฿299 → **฿60**
+- Premium (3 cards + 2 follow-ups): ฿249 → **฿50**
+- Ultimate (10 cards + 3 follow-ups): ฿399 → **฿80**
 
 **Banner Message:** "ลด 80% สำหรับลูกค้า 30 คนแรก!"
 **Goal:** Initial buzz, first reviews, test system
@@ -26,8 +26,8 @@
 **Duration:** 1-2 weeks
 **Pricing:**
 - Basic: ฿99 → **฿30**
-- Premium: ฿199 → **฿60**
-- Ultimate: ฿299 → **฿90**
+- Premium: ฿249 → **฿75**
+- Ultimate: ฿399 → **฿120**
 
 **Banner Message:** "ลด 70% สำหรับลูกค้า 50 คนถัดไป!"
 **Goal:** Build momentum, more reviews
@@ -39,8 +39,8 @@
 **Duration:** 2-3 weeks
 **Pricing:**
 - Basic: ฿99 → **฿50**
-- Premium: ฿199 → **฿100**
-- Ultimate: ฿299 → **฿150**
+- Premium: ฿249 → **฿125**
+- Ultimate: ฿399 → **฿200**
 
 **Banner Message:** "ลด 50% ราคาครึ่งเดียว!"
 **Goal:** "Half price" psychological appeal
@@ -52,8 +52,8 @@
 **Duration:** 3-4 weeks
 **Pricing:**
 - Basic: ฿99 → **฿70**
-- Premium: ฿199 → **฿140**
-- Ultimate: ฿299 → **฿210**
+- Premium: ฿249 → **฿175**
+- Ultimate: ฿399 → **฿280**
 
 **Banner Message:** "ลด 30% ส่วนลดพิเศษ!"
 **Goal:** Still attractive discount, building toward full price
@@ -65,8 +65,8 @@
 **Duration:** 1-2 months
 **Pricing:**
 - Basic: ฿99 → **฿85**
-- Premium: ฿199 → **฿170**
-- Ultimate: ฿299 → **฿255**
+- Premium: ฿249 → **฿212**
+- Ultimate: ฿399 → **฿340**
 
 **Banner Message:** "ส่วนลดสุดท้าย 15%!"
 **Goal:** Last chance discount before full price
@@ -78,8 +78,8 @@
 **Duration:** Permanent
 **Pricing:**
 - Basic: **฿99**
-- Premium: **฿199**
-- Ultimate: **฿299**
+- Premium: **฿249**
+- Ultimate: **฿399**
 
 **Banner Message:** Remove promotion banner entirely
 **Goal:** Sustainable long-term pricing
@@ -106,19 +106,19 @@
    <span style="...">฿20</span>  <!-- Current tier price -->
 
    <!-- Premium Package -->
-   <span style="...">฿199</span>  <!-- Original price -->
-   <span style="...">฿40</span>   <!-- Current tier price -->
+   <span style="...">฿249</span>  <!-- Original price -->
+   <span style="...">฿50</span>   <!-- Current tier price -->
 
    <!-- Ultimate Package -->
-   <span style="...">฿299</span>  <!-- Original price -->
-   <span style="...">฿60</span>   <!-- Current tier price -->
+   <span style="...">฿399</span>  <!-- Original price -->
+   <span style="...">฿80</span>   <!-- Current tier price -->
    ```
 
 2. **selectPackageWithPrice() function calls**
    ```html
    onclick="selectPackageWithPrice('quick', 1, 1, 'basic', 20)"
-   onclick="selectPackageWithPrice('deep', 3, 2, 'premium', 40)"
-   onclick="selectPackageWithPrice('complete', 10, 3, 'ultimate', 60)"
+   onclick="selectPackageWithPrice('deep', 3, 2, 'premium', 50)"
+   onclick="selectPackageWithPrice('complete', 10, 3, 'ultimate', 80)"
    ```
    Update the last parameter (current tier price)
 
@@ -138,30 +138,30 @@ git push origin master
 ## 📋 TIER TRANSITION CHECKLIST
 
 ### When hitting 30 customers (Tier 1 → Tier 2):
-- [ ] Update all prices: ฿20→฿30, ฿40→฿60, ฿60→฿90
+- [ ] Update all prices: ฿20→฿30, ฿50→฿75, ฿80→฿120
 - [ ] Update banner: "ลด 70% สำหรับลูกค้า 50 คนถัดไป!"
 - [ ] Update function calls with new prices
 - [ ] Test checkout flow with new prices
 - [ ] Announce tier change on Facebook
 
 ### When hitting 80 customers (Tier 2 → Tier 3):
-- [ ] Update all prices: ฿30→฿50, ฿60→฿100, ฿90→฿150
+- [ ] Update all prices: ฿30→฿50, ฿75→฿125, ฿120→฿200
 - [ ] Update banner: "ลด 50% ราคาครึ่งเดียว!"
 - [ ] Update function calls
 - [ ] Announce "Half Price" milestone
 
 ### When hitting 130 customers (Tier 3 → Tier 4):
-- [ ] Update all prices: ฿50→฿70, ฿100→฿140, ฿150→฿210
+- [ ] Update all prices: ฿50→฿70, ฿125→฿175, ฿200→฿280
 - [ ] Update banner: "ลด 30% ส่วนลดพิเศษ!"
 - [ ] Update function calls
 
 ### When hitting 200 customers (Tier 4 → Tier 5):
-- [ ] Update all prices: ฿70→฿85, ฿140→฿170, ฿210→฿255
+- [ ] Update all prices: ฿70→฿85, ฿175→฿212, ฿280→฿340
 - [ ] Update banner: "ส่วนลดสุดท้าย 15%!"
 - [ ] Announce "Final Discount" urgency
 
 ### When hitting 300 customers (Tier 5 → Tier 6):
-- [ ] Update all prices: ฿85→฿99, ฿170→฿199, ฿255→฿299
+- [ ] Update all prices: ฿85→฿99, ฿212→฿249, ฿340→฿399
 - [ ] **REMOVE** promotion banner entirely
 - [ ] Update to show normal pricing only
 - [ ] Announce transition to full price
@@ -206,14 +206,14 @@ git push origin master
 
 | Tier | Customers | Avg Price | Revenue | Cumulative |
 |------|-----------|-----------|---------|------------|
-| 1 | 30 | ฿40 | ฿1,200 | ฿1,200 |
-| 2 | 50 | ฿60 | ฿3,000 | ฿4,200 |
-| 3 | 50 | ฿100 | ฿5,000 | ฿9,200 |
-| 4 | 70 | ฿140 | ฿9,800 | ฿19,000 |
-| 5 | 100 | ฿170 | ฿17,000 | ฿36,000 |
-| 6 | 50 | ฿199 | ฿9,950 | ฿45,950 |
+| 1 | 30 | ฿50 | ฿1,500 | ฿1,500 |
+| 2 | 50 | ฿75 | ฿3,750 | ฿5,250 |
+| 3 | 50 | ฿125 | ฿6,250 | ฿11,500 |
+| 4 | 70 | ฿175 | ฿12,250 | ฿23,750 |
+| 5 | 100 | ฿212 | ฿21,200 | ฿44,950 |
+| 6 | 50 | ฿249 | ฿12,450 | ฿57,400 |
 
-**After 350 customers:** ~฿46,000 revenue
+**After 350 customers:** ~฿57,400 revenue (+฿11,400 vs old pricing)
 
 ---
 
