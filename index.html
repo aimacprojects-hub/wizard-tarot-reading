@@ -1190,7 +1190,7 @@
                 ใช้คำถามติดตามเพื่อขอคำชี้แจงเพิ่มเติมหรือเจาะลึกในประเด็นเดียวกันจากไพ่ชุดเดิมที่เปิดไว้แล้ว พ่อมดจะตีความไพ่เหล่านั้นในมุมมองที่ลึกซึ้งยิ่งขึ้น
             </p>
             <div class="btn-container" style="margin-top: 30px; display: flex; flex-direction: column; gap: 15px; max-width: 300px; margin-left: auto; margin-right: auto;">
-                <button class="btn" onclick="shareReading()" style="background: linear-gradient(135deg, #e74c3c, #f39c12); width: 100%;">📤 แชร์ผลการอ่าน</button>
+                <button class="btn" onclick="copyReading()" style="background: linear-gradient(135deg, #e74c3c, #f39c12); width: 100%;">📋 คัดลอกคำทำนาย</button>
                 <button class="btn" onclick="showReviewModal()" style="background: linear-gradient(135deg, #f39c12, #e67e22); width: 100%;">⭐ แสดงความคิดเห็น</button>
                 <button class="btn btn-secondary" onclick="startOver()" style="width: 100%;">🔄 ดูดวงอีกครั้ง</button>
             </div>
@@ -2223,7 +2223,7 @@
             document.getElementById('chatMessages').insertAdjacentHTML('beforeend', reminder);
         }
 
-        function shareReading() {
+        function copyReading() {
             // Get the reading text (clean version without HTML)
             const chatMessages = document.getElementById('chatMessages');
             const readingElements = chatMessages.querySelectorAll('.reading-text');
@@ -2233,31 +2233,26 @@
                 readingText += el.innerText + '\n\n';
             });
 
-            // Full share text with branding
-            const fullShareText = `${readingText}━━━━━━━━━━━━━━━━\n🔮 The Wizard of Destiny Tales\nwizard-interactive-v2.vercel.app`;
+            // Full text with branding
+            const fullText = `${readingText}━━━━━━━━━━━━━━━━\n🔮 The Wizard of Destiny Tales\nwizard-interactive-v2.vercel.app`;
 
-            // Try to copy to clipboard (silent)
+            // Copy to clipboard
             if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(fullShareText).catch(err => {
-                    console.log('Clipboard copy failed:', err);
-                });
-            }
-
-            // Always try to share via Web Share API
-            if (navigator.share) {
-                navigator.share({
-                    text: fullShareText
-                }).then(() => {
-                    console.log('Shared successfully');
-                }).catch((error) => {
-                    console.log('Share failed:', error);
-                    // If share fails, show fallback
-                    fallbackShare(fullShareText);
+                navigator.clipboard.writeText(fullText).then(() => {
+                    // Show success alert
+                    alert('✅ คัดลอกสำเร็จ!\n\nคำทำนายเต็มถูกคัดลอกแล้ว\nเปิด WhatsApp/LINE แล้วกดวาง (Paste) เพื่อแชร์');
+                }).catch(err => {
+                    alert('❌ ไม่สามารถคัดลอกได้\n\nกรุณาลองอีกครั้ง');
                 });
             } else {
-                // Fallback for desktop
-                fallbackShare(fullShareText);
+                // Fallback: show the text in a modal to copy manually
+                fallbackShare(fullText);
             }
+        }
+
+        // Keep shareReading for backward compatibility (if called elsewhere)
+        function shareReading() {
+            copyReading();
         }
 
 
