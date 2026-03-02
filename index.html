@@ -724,38 +724,6 @@
             font-size: 15px;
         }
 
-        /* Mobile Sticky CTA */
-        .sticky-cta-mobile {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, #9b59b6, #8e44ad);
-            padding: 12px 15px;
-            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            display: none;
-            border-top: 2px solid #d4af37;
-        }
-
-        .sticky-cta-mobile button {
-            width: 100%;
-            padding: 14px 20px;
-            font-size: 17px;
-            font-weight: bold;
-            background: linear-gradient(135deg, #d4af37, #f39c12);
-            color: #000;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'Sarabun', sans-serif;
-            box-shadow: 0 4px 10px rgba(212, 175, 55, 0.4);
-            transition: all 0.3s;
-        }
-
-        .sticky-cta-mobile button:active {
-            transform: scale(0.98);
-        }
 
         /* Mobile Responsive Adjustments for CRO */
         @media (max-width: 768px) {
@@ -2774,52 +2742,12 @@
             }
         }
 
-        // Mobile Sticky CTA - Show on scroll
-        function initStickyCTA() {
-            if (window.innerWidth > 768) return; // Desktop - don't show
-
-            const stickyCTA = document.getElementById('sticky-cta');
-            if (!stickyCTA) return;
-
-            window.addEventListener('scroll', () => {
-                const currentScroll = window.pageYOffset;
-
-                // Show CTA when scrolled down 300px
-                if (currentScroll > 300) {
-                    stickyCTA.style.display = 'block';
-                } else {
-                    stickyCTA.style.display = 'none';
-                }
-            });
-        }
-
-        function scrollToStart() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
         // Initialize CRO features on page load (add to existing DOMContentLoaded if exists)
         window.addEventListener('DOMContentLoaded', () => {
             startCountdown();
             updateSlots();
-
-            if (window.innerWidth <= 768) {
-                initStickyCTA();
-            }
-        });
-
-        // Re-initialize on resize
-        window.addEventListener('resize', () => {
-            if (window.innerWidth <= 768) {
-                initStickyCTA();
-            }
         });
     </script>
 
-    <!-- CRO: Mobile Sticky CTA -->
-    <div class="sticky-cta-mobile" id="sticky-cta">
-        <button onclick="scrollToStart()">
-            เริ่มดูดวง - เพียง ฿99 →
-        </button>
-    </div>
 </body>
 </html>
