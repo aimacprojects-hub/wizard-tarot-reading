@@ -1676,13 +1676,17 @@
         }
 
         function selectPackageWithPrice(type, cards, followUps, packageTier, discountedPrice) {
-            if (!currentPricingTier) {
-                alert('กำลังโหลดข้อมูลราคา กรุณารอสักครู่...');
-                return;
-            }
-
             // Use discounted price if provided, otherwise fall back to original pricing
-            const price = discountedPrice || currentPricingTier.prices[packageTier];
+            let price;
+            if (discountedPrice) {
+                price = discountedPrice;
+            } else {
+                if (!currentPricingTier) {
+                    alert('กำลังโหลดข้อมูลราคา กรุณารอสักครู่...');
+                    return;
+                }
+                price = currentPricingTier.prices[packageTier];
+            }
             selectedPackage = { type, price, cards, followUps, packageTier };
             followUpCount = followUps;
             // Don't save session yet - only save after payment
