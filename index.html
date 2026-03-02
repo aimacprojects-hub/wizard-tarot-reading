@@ -1774,13 +1774,13 @@
             document.getElementById('totalNeeded').textContent = count;
             selectedCards = [];
 
-            const totalCards = 10;
+            const totalCards = 20;
             // Responsive radius - smaller for better fit
             const isMobile = window.innerWidth <= 768;
             const radius = isMobile ? 140 : 180;
-            const cardWidth = isMobile ? 35 : 40; // half of card width
-            const arcAngle = 130; // total arc spread in degrees
-            const startAngle = -65; // start from left
+            const cardWidth = isMobile ? 32.5 : 40; // half of card width
+            const arcAngle = 160; // wider arc for more cards
+            const startAngle = -80; // start from left
 
             for (let i = 0; i < totalCards; i++) {
                 const card = document.createElement('div');
@@ -1807,9 +1807,9 @@
             const cards = document.querySelectorAll('.tarot-card');
             cards.forEach((card, i) => {
                 // Get original rotation from position - match initializeCards
-                const totalCards = 10;
-                const arcAngle = 130;
-                const startAngle = -65;
+                const totalCards = 20;
+                const arcAngle = 160;
+                const startAngle = -80;
                 const angle = startAngle + (arcAngle / (totalCards - 1)) * i;
 
                 // Flip card while maintaining position rotation
