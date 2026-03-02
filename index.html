@@ -2233,10 +2233,75 @@
                 readingText += el.innerText + '\n\n';
             });
 
-            // Minimal share text - just the reading + simple footer
-            const shareText = `${readingText}━━━━━━━━━━━━━━━━\n🔮 The Wizard of Destiny Tales\nwizard-interactive-v2.vercel.app`;
+            // Full share text with branding
+            const fullShareText = `${readingText}━━━━━━━━━━━━━━━━\n🔮 The Wizard of Destiny Tales\nwizard-interactive-v2.vercel.app`;
 
-            // Check if Web Share API is available (mobile devices)
+            // Copy to clipboard
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(fullShareText).then(() => {
+                    // Show success message
+                    showShareNotification();
+                }).catch(err => {
+                    console.log('Clipboard copy failed:', err);
+                    // Still try to share even if clipboard fails
+                    shareViaAPI(fullShareText);
+                });
+            } else {
+                shareViaAPI(fullShareText);
+            }
+        }
+
+        function showShareNotification() {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, #9b59b6, #8e44ad);
+                color: white;
+                padding: 30px;
+                border-radius: 20px;
+                box-shadow: 0 10px 50px rgba(155, 89, 182, 0.5);
+                z-index: 10000;
+                text-align: center;
+                max-width: 90%;
+                animation: fadeIn 0.3s;
+            `;
+
+            notification.innerHTML = `
+                <div style="font-size: 48px; margin-bottom: 15px;">✅</div>
+                <h3 style="margin: 0 0 15px 0; font-size: 20px;">คัดลอกสำเร็จ!</h3>
+                <p style="margin: 0; font-size: 16px; line-height: 1.6;">
+                    คำทำนายเต็มถูกคัดลอกแล้ว<br>
+                    เปิด WhatsApp/LINE และกดวาง (Paste) เพื่อแชร์
+                </p>
+                <button onclick="this.parentElement.remove()" style="
+                    margin-top: 20px;
+                    background: white;
+                    color: #9b59b6;
+                    border: none;
+                    padding: 12px 30px;
+                    border-radius: 25px;
+                    font-size: 16px;
+                    font-weight: bold;
+                    cursor: pointer;
+                    font-family: 'Sarabun', sans-serif;
+                ">รับทราบ</button>
+            `;
+
+            document.body.appendChild(notification);
+
+            // Auto-remove after 8 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 8000);
+        }
+
+        function shareViaAPI(shareText) {
+            // Try Web Share API as fallback
             if (navigator.share) {
                 navigator.share({
                     text: shareText
@@ -2247,7 +2312,6 @@
                     fallbackShare(shareText);
                 });
             } else {
-                // Fallback for desktop - show share options dialog
                 fallbackShare(shareText);
             }
         }
