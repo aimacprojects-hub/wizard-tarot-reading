@@ -2233,35 +2233,22 @@
                 readingText += el.innerText + '\n\n';
             });
 
-            // Create formatted share text (full version)
-            const fullShareText = `🔮✨ The Wizard of Destiny Tales ✨🔮\n\n${readingText}\n━━━━━━━━━━━━━━━━\n💫 ต้องการคำทำนายของคุณเอง?\n🌟 เข้าชมที่: wizard-interactive-v2.vercel.app`;
-
-            // Try to copy full text to clipboard first
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(fullShareText).then(() => {
-                    console.log('Full reading copied to clipboard');
-                }).catch(err => {
-                    console.log('Clipboard copy failed:', err);
-                });
-            }
-
-            // Then share - use shorter message to avoid truncation
-            const shortShareMessage = `🔮 ดูคำทำนายไพ่ทาโรต์ของฉัน!\n\n💫 ได้รับคำทำนายจาก The Wizard of Destiny Tales\n\n🌟 ต้องการคำทำนายของคุณเอง?\nเข้าชมที่: wizard-interactive-v2.vercel.app\n\n✨ (คำทำนายเต็มถูกคัดลอกไปยังคลิปบอร์ดแล้ว - กดวางเพื่อแชร์)`;
+            // Minimal share text - just the reading + simple footer
+            const shareText = `${readingText}━━━━━━━━━━━━━━━━\n🔮 The Wizard of Destiny Tales\nwizard-interactive-v2.vercel.app`;
 
             // Check if Web Share API is available (mobile devices)
             if (navigator.share) {
                 navigator.share({
-                    title: '🔮 The Wizard of Destiny Tales',
-                    text: shortShareMessage
+                    text: shareText
                 }).then(() => {
                     console.log('Shared successfully');
                 }).catch((error) => {
                     console.log('Share failed:', error);
-                    fallbackShare(fullShareText);
+                    fallbackShare(shareText);
                 });
             } else {
                 // Fallback for desktop - show share options dialog
-                fallbackShare(fullShareText);
+                fallbackShare(shareText);
             }
         }
 
