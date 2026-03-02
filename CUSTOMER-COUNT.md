@@ -26,10 +26,34 @@
 - Line ~1147 (Payment page): Keep in sync with pricing page
 - When slots hit 0: Remove promotion banner entirely
 
-**Step 3: Update Testimonial Section (Optional)**
+**Step 3: Update Hero Social Proof (Line ~820)**
+- Currently hidden (commented out) - waiting for first customer
+- After 1st customer: Uncomment and show "⭐ 1 การทำนายที่สำเร็จ"
+- After 5th customer: Show "⭐ 5+ การทำนาย | คะแนน 5.0/5"
+- After 10th customer: Add satisfaction % "⭐ 10+ การทำนาย | คะแนน 4.8/5 | 95% ลูกค้าพอใจ"
+
+**Step 4: Update Testimonial Section (Optional)**
 - Line ~955: Update customer count when you want to show social proof
 
-### Example Updates:
+### Hero Social Proof Updates:
+
+```html
+<!-- After 1st customer (Line ~820) - Uncomment this: -->
+<div class="hero-social-proof" style="text-align: center; margin-top: 20px; padding: 12px; background: rgba(155, 89, 182, 0.15); border-radius: 8px; font-size: 14px; color: #c9b3d4;">
+    ⭐ 1 การทำนายที่สำเร็จ
+</div>
+
+<!-- After 5 customers: -->
+⭐ 5+ การทำนาย | คะแนน 5.0/5
+
+<!-- After 10 customers: -->
+⭐ 10+ การทำนาย | คะแนน 4.8/5 | 95% ลูกค้าพอใจ
+
+<!-- After 50 customers: -->
+⭐ 50+ การทำนาย | คะแนน 4.9/5 | 98% ลูกค้าพอใจ
+```
+
+### Testimonial Section Updates:
 
 ```html
 <!-- 1 customer -->
