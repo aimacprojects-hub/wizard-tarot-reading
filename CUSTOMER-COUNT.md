@@ -1,22 +1,35 @@
 # Customer Count Tracker
 
-**Purpose:** Track real customer numbers for honest testimonial section updates
+**Purpose:** Track real customer numbers for honest testimonial section + promotion slots
 
 ---
 
-## Current Customer Count: 0
+## Current Metrics
 
-**Last Updated:** March 2, 2026
+**Total Paying Customers:** 0
+**Promotion Slots Remaining:** 30 out of 30
+**Last Updated:** March 2, 2026 (Launch Day)
 
 ---
 
 ## How to Update
 
-When a customer completes their reading:
+### When a Customer Pays and Completes Reading:
 
-1. Increment the count in this file
-2. Update the testimonial subtitle in `index.html` (around line 953)
-3. Example updates:
+**Step 1: Update This File**
+- Increment "Total Paying Customers" count
+- Decrement "Promotion Slots Remaining" (30 → 29 → 28...)
+- Add entry to Customer History Log
+
+**Step 2: Update Promotion Banner in `index.html`**
+- Line ~1003 (Pricing page): Change "30 คนแรก" to "29 คนแรก" etc.
+- Line ~1147 (Payment page): Keep in sync with pricing page
+- When slots hit 0: Remove promotion banner entirely
+
+**Step 3: Update Testimonial Section (Optional)**
+- Line ~955: Update customer count when you want to show social proof
+
+### Example Updates:
 
 ```html
 <!-- 1 customer -->
@@ -37,11 +50,38 @@ When a customer completes their reading:
 
 ---
 
+## Promotion Slot Updates
+
+```html
+<!-- 30 slots (Launch) -->
+ลด 80% สำหรับลูกค้า 30 คนแรก!
+
+<!-- 29 slots (After 1st customer) -->
+ลด 80% สำหรับลูกค้า 29 คนแรก!
+
+<!-- 20 slots (After 10 customers) -->
+ลด 80% สำหรับลูกค้า 20 คนแรก!
+
+<!-- 10 slots (After 20 customers) -->
+ลด 80% สำหรับลูกค้า 10 คนแรก!
+
+<!-- 5 slots (After 25 customers) -->
+ลด 80% สำหรับลูกค้า 5 คนสุดท้าย! ⚡
+
+<!-- 1 slot (After 29 customers) -->
+ลด 80% สำหรับลูกค้าสุดท้าย! 🔥
+
+<!-- 0 slots (After 30 customers) -->
+Remove entire promotion banner, return to normal pricing
+```
+
+---
+
 ## Customer History Log
 
-| Date | Count | Notes |
-|------|-------|-------|
-| Mar 2, 2026 | 0 | Website launched |
+| Date | Customers | Slots Remaining | Notes |
+|------|-----------|-----------------|-------|
+| Mar 2, 2026 | 0 | 30 | Website launched, promotion started |
 
 ---
 
