@@ -1296,13 +1296,13 @@
 
             <!-- Star Rating -->
             <div style="text-align: center; margin-bottom: 20px;">
-                <div style="font-size: 14px; color: #ccc; margin-bottom: 10px;">คลิกเพื่อให้คะแนน (1-5 ดาว)</div>
-                <div id="starRating" style="font-size: 40px; cursor: pointer;">
-                    <span class="star" data-rating="1" style="color: #666; transition: color 0.2s;">☆</span>
-                    <span class="star" data-rating="2" style="color: #666; transition: color 0.2s;">☆</span>
-                    <span class="star" data-rating="3" style="color: #666; transition: color 0.2s;">☆</span>
-                    <span class="star" data-rating="4" style="color: #666; transition: color 0.2s;">☆</span>
-                    <span class="star" data-rating="5" style="color: #666; transition: color 0.2s;">☆</span>
+                <div style="font-size: 14px; color: #ccc; margin-bottom: 10px;">แตะเพื่อให้คะแนน (1-5 ดาว)</div>
+                <div id="starRating" style="font-size: 40px; cursor: pointer; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent;">
+                    <span class="star" data-rating="1" style="color: #666; transition: color 0.2s; padding: 0 2px; display: inline-block; cursor: pointer;">☆</span>
+                    <span class="star" data-rating="2" style="color: #666; transition: color 0.2s; padding: 0 2px; display: inline-block; cursor: pointer;">☆</span>
+                    <span class="star" data-rating="3" style="color: #666; transition: color 0.2s; padding: 0 2px; display: inline-block; cursor: pointer;">☆</span>
+                    <span class="star" data-rating="4" style="color: #666; transition: color 0.2s; padding: 0 2px; display: inline-block; cursor: pointer;">☆</span>
+                    <span class="star" data-rating="5" style="color: #666; transition: color 0.2s; padding: 0 2px; display: inline-block; cursor: pointer;">☆</span>
                 </div>
                 <div id="ratingText" style="color: #f39c12; margin-top: 10px; font-size: 14px; min-height: 20px;"></div>
             </div>
@@ -2525,24 +2525,67 @@
         function showReviewModal() {
             document.getElementById('reviewModal').style.display = 'flex';
 
-            // Set up star rating interactivity
+            // Set up star rating interactivity (only once)
             const stars = document.querySelectorAll('.star');
+            const starRating = document.getElementById('starRating');
+
+            // Remove old listeners first
             stars.forEach(star => {
-                star.addEventListener('click', function() {
+                const newStar = star.cloneNode(true);
+                star.parentNode.replaceChild(newStar, star);
+            });
+
+            // Add new listeners to fresh stars
+            const freshStars = document.querySelectorAll('.star');
+            freshStars.forEach(star => {
+                // Handle both click (desktop) and touchstart (mobile)
+                const handleSelect = function(e) {
+                    e.preventDefault();
                     selectedRating = parseInt(this.dataset.rating);
                     updateStars();
-                });
+                };
+
+                star.addEventListener('click', handleSelect);
+                star.addEventListener('touchstart', handleSelect, { passive: false });
+
+                // Desktop hover
                 star.addEventListener('mouseenter', function() {
                     const hoverRating = parseInt(this.dataset.rating);
                     updateStars(hoverRating);
                 });
             });
 
+            // Clone and replace starRating for clean mouseleave
+            const newStarRating = starRating.cloneNode(true);
+            starRating.parentNode.replaceChild(newStarRating, starRating);
+
             document.getElementById('starRating').addEventListener('mouseleave', function() {
                 updateStars();
             });
 
+            // Re-attach star listeners after cloning container
+            const reattachStars = document.querySelectorAll('.star');
+            reattachStars.forEach(star => {
+                const handleSelect = function(e) {
+                    e.preventDefault();
+                    selectedRating = parseInt(this.dataset.rating);
+                    updateStars();
+                };
+
+                star.addEventListener('click', handleSelect);
+                star.addEventListener('touchstart', handleSelect, { passive: false });
+
+                star.addEventListener('mouseenter', function() {
+                    const hoverRating = parseInt(this.dataset.rating);
+                    updateStars(hoverRating);
+                });
+            });
+
             // Character counter
+            const feedbackInput = document.getElementById('reviewFeedback');
+            const newFeedbackInput = feedbackInput.cloneNode(true);
+            feedbackInput.parentNode.replaceChild(newFeedbackInput, feedbackInput);
+
             document.getElementById('reviewFeedback').addEventListener('input', function() {
                 document.getElementById('feedbackCount').textContent = this.value.length;
             });
