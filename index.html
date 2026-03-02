@@ -1168,28 +1168,27 @@
         <div class="screen" id="chatScreen">
             <h2 style="text-align: center; margin-bottom: 20px; color: #9b59b6;">นิทานดวงชะตาของคุณ</h2>
 
-            <!-- Unified chat interface -->
-            <div style="background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(155, 89, 182, 0.3); border-radius: 15px; overflow: hidden; display: flex; flex-direction: column;">
-                <!-- Chat messages area (scrollable) -->
-                <div id="chatMessages" style="padding: 15px; min-height: 400px; max-height: 500px; overflow-y: auto;"></div>
+            <!-- Chat interface with input inside -->
+            <div style="background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(155, 89, 182, 0.3); border-radius: 15px; padding: 15px; min-height: 500px; max-height: 600px; display: flex; flex-direction: column;">
+                <!-- Messages area (scrollable, takes remaining space) -->
+                <div id="chatMessages" style="flex: 1; overflow-y: auto; margin-bottom: 15px;"></div>
 
-                <!-- Input field (directly below messages) -->
-                <div style="display: flex; gap: 10px; padding: 15px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid rgba(155, 89, 182, 0.3);">
+                <!-- Input field inside chat window -->
+                <div style="display: flex; gap: 10px; padding-top: 15px; border-top: 1px solid rgba(155, 89, 182, 0.2);">
                     <input type="text" id="followUpInput" placeholder="พิมพ์คำถามติดตาม..." style="flex: 1; padding: 12px; border: 2px solid rgba(155, 89, 182, 0.3); border-radius: 25px; background: rgba(255, 255, 255, 0.1); color: #fff; font-family: 'Sarabun', sans-serif;">
                     <button class="btn" onclick="askFollowUp()" style="padding: 12px 25px; font-size: 16px;">ส่ง</button>
                 </div>
-
-                <!-- Follow-up count -->
-                <div id="followUpCount" style="text-align: center; color: #9b59b6; padding: 10px 15px; font-size: 16px; background: rgba(155, 89, 182, 0.05); border-top: 1px solid rgba(155, 89, 182, 0.1);">
-                    คำถามติดตามเหลือ: 1
-                </div>
-
-                <!-- Info box at bottom -->
-                <p style="color: #f39c12; background: rgba(243, 156, 18, 0.1); border-top: 1px solid rgba(243, 156, 18, 0.2); border-left: 3px solid #f39c12; padding: 12px 15px; margin: 0; font-size: 14px; line-height: 1.6;">
-                    💬 <strong>คำถามติดตามคืออะไร?</strong><br>
-                    ใช้คำถามติดตามเพื่อขอคำชี้แจงเพิ่มเติมหรือเจาะลึกในประเด็นเดียวกันจากไพ่ชุดเดิมที่เปิดไว้แล้ว พ่อมดจะตีความไพ่เหล่านั้นในมุมมองที่ลึกซึ้งยิ่งขึ้น
-                </p>
             </div>
+
+            <!-- Info and count below chat window -->
+            <div id="followUpCount" style="text-align: center; color: #9b59b6; padding: 10px 15px; margin-top: 15px; font-size: 16px; background: rgba(155, 89, 182, 0.05); border-radius: 10px;">
+                คำถามติดตามเหลือ: 1
+            </div>
+
+            <p style="color: #f39c12; background: rgba(243, 156, 18, 0.1); border-left: 3px solid #f39c12; padding: 12px 15px; margin-top: 15px; border-radius: 8px; font-size: 14px; line-height: 1.6;">
+                💬 <strong>คำถามติดตามคืออะไร?</strong><br>
+                ใช้คำถามติดตามเพื่อขอคำชี้แจงเพิ่มเติมหรือเจาะลึกในประเด็นเดียวกันจากไพ่ชุดเดิมที่เปิดไว้แล้ว พ่อมดจะตีความไพ่เหล่านั้นในมุมมองที่ลึกซึ้งยิ่งขึ้น
+            </p>
             <div class="btn-container" style="margin-top: 30px;">
                 <button class="btn btn-secondary" onclick="startOver()">🔄 ดูดวงอีกครั้ง</button>
                 <button class="btn" onclick="downloadReading()">📄 บันทึกการอ่าน</button>
