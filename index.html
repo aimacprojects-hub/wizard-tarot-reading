@@ -787,7 +787,7 @@
             </div>
 
             <!-- CRO: Social Proof (Simplified) -->
-            <div style="text-align: center; margin-top: 20px; padding: 12px; background: rgba(155, 89, 182, 0.15); border-radius: 8px; font-size: 14px; color: #c9b3d4;">
+            <div class="hero-social-proof" style="text-align: center; margin-top: 20px; padding: 12px; background: rgba(155, 89, 182, 0.15); border-radius: 8px; font-size: 14px; color: #c9b3d4;">
                 ⭐ 1,247+ การทำนาย | คะแนน 4.9/5 | 98% ลูกค้าพอใจ
             </div>
         </header>
@@ -2681,6 +2681,18 @@
             document.getElementById(screenId).classList.add('active');
             currentScreen = screenId;
             window.scrollTo(0, 0);
+
+            // Hide hero pricing and social proof after user leaves the topic screen
+            const heroPricing = document.querySelector('.hero-pricing');
+            const heroSocialProof = document.querySelector('.hero-social-proof');
+
+            if (screenId === 'topicScreen') {
+                if (heroPricing) heroPricing.style.display = 'block';
+                if (heroSocialProof) heroSocialProof.style.display = 'block';
+            } else {
+                if (heroPricing) heroPricing.style.display = 'none';
+                if (heroSocialProof) heroSocialProof.style.display = 'none';
+            }
         }
 
         function goBack(screenId) {
