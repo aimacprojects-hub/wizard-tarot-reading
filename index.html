@@ -1173,22 +1173,22 @@
                 <!-- Chat messages area (scrollable) -->
                 <div id="chatMessages" style="padding: 15px; min-height: 400px; max-height: 500px; overflow-y: auto;"></div>
 
-                <!-- Info box inside chat -->
-                <p style="color: #f39c12; background: rgba(243, 156, 18, 0.1); border-top: 1px solid rgba(243, 156, 18, 0.2); border-left: 3px solid #f39c12; padding: 12px 15px; margin: 0; font-size: 14px; line-height: 1.6;">
-                    💬 <strong>คำถามติดตามคืออะไร?</strong><br>
-                    ใช้คำถามติดตามเพื่อขอคำชี้แจงเพิ่มเติมหรือเจาะลึกในประเด็นเดียวกันจากไพ่ชุดเดิมที่เปิดไว้แล้ว พ่อมดจะตีความไพ่เหล่านั้นในมุมมองที่ลึกซึ้งยิ่งขึ้น
-                </p>
-
                 <!-- Follow-up count -->
                 <div id="followUpCount" style="text-align: center; color: #9b59b6; padding: 10px 15px; font-size: 16px; background: rgba(155, 89, 182, 0.05); border-top: 1px solid rgba(155, 89, 182, 0.1);">
                     คำถามติดตามเหลือ: 1
                 </div>
 
-                <!-- Input field at bottom (like messaging apps) -->
+                <!-- Input field (above info box) -->
                 <div style="display: flex; gap: 10px; padding: 15px; background: rgba(0, 0, 0, 0.2); border-top: 1px solid rgba(155, 89, 182, 0.3);">
                     <input type="text" id="followUpInput" placeholder="พิมพ์คำถามติดตาม..." style="flex: 1; padding: 12px; border: 2px solid rgba(155, 89, 182, 0.3); border-radius: 25px; background: rgba(255, 255, 255, 0.1); color: #fff; font-family: 'Sarabun', sans-serif;">
                     <button class="btn" onclick="askFollowUp()" style="padding: 12px 25px; font-size: 16px;">ส่ง</button>
                 </div>
+
+                <!-- Info box at bottom -->
+                <p style="color: #f39c12; background: rgba(243, 156, 18, 0.1); border-top: 1px solid rgba(243, 156, 18, 0.2); border-left: 3px solid #f39c12; padding: 12px 15px; margin: 0; font-size: 14px; line-height: 1.6;">
+                    💬 <strong>คำถามติดตามคืออะไร?</strong><br>
+                    ใช้คำถามติดตามเพื่อขอคำชี้แจงเพิ่มเติมหรือเจาะลึกในประเด็นเดียวกันจากไพ่ชุดเดิมที่เปิดไว้แล้ว พ่อมดจะตีความไพ่เหล่านั้นในมุมมองที่ลึกซึ้งยิ่งขึ้น
+                </p>
             </div>
             <div class="btn-container" style="margin-top: 30px;">
                 <button class="btn btn-secondary" onclick="startOver()">🔄 ดูดวงอีกครั้ง</button>
