@@ -2534,6 +2534,10 @@
         function showReviewModal() {
             document.getElementById('reviewModal').style.display = 'flex';
 
+            // Reset rating to 0
+            selectedRating = 0;
+            console.log('showReviewModal: selectedRating reset to', selectedRating);
+
             // Reset stars
             updateStars();
 
@@ -2564,13 +2568,17 @@
             const stars = document.querySelectorAll('.star');
             const ratingTexts = ['', 'ไม่พอใจ', 'พอใช้', 'ดี', 'ดีมาก', 'ยอดเยี่ยม!'];
 
+            console.log('updateStars: rating =', rating, 'selectedRating =', selectedRating, 'stars found =', stars.length);
+
             stars.forEach((star, index) => {
                 if (index < rating) {
                     star.textContent = '★';
                     star.style.color = '#f39c12';
+                    console.log('Star', index+1, 'set to FILLED');
                 } else {
                     star.textContent = '☆';
                     star.style.color = '#666';
+                    console.log('Star', index+1, 'set to EMPTY');
                 }
             });
 
