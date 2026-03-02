@@ -1360,7 +1360,13 @@
                 setTimeout(() => {
                     // Restore payment screen UI elements if package was selected
                     if (selectedPackage && selectedPackage.type) {
-                        document.getElementById('selectedPackageName').textContent = selectedPackage.type;
+                        // Package name mapping
+                        const packageNames = {
+                            'quick': 'ไพ่แห่งแสงนำทาง',
+                            'deep': 'ไพ่แห่งแสงสว่าง',
+                            'complete': 'ไพ่แห่งความจริง'
+                        };
+                        document.getElementById('selectedPackageName').textContent = packageNames[selectedPackage.type] || selectedPackage.type;
                         document.getElementById('paymentAmount').textContent = `฿${selectedPackage.price}`;
                     }
 
@@ -1663,8 +1669,15 @@
                 return;
             }
 
+            // Package name mapping
+            const packageNames = {
+                'quick': 'ไพ่แห่งแสงนำทาง',
+                'deep': 'ไพ่แห่งแสงสว่าง',
+                'complete': 'ไพ่แห่งความจริง'
+            };
+
             // Show payment screen
-            document.getElementById('selectedPackageName').textContent = type;
+            document.getElementById('selectedPackageName').textContent = packageNames[type] || type;
             document.getElementById('paymentAmount').textContent = `฿${price}`;
 
             goToScreen('paymentScreen');
@@ -1685,8 +1698,15 @@
                 return;
             }
 
+            // Package name mapping
+            const packageNames = {
+                'quick': 'ไพ่แห่งแสงนำทาง',
+                'deep': 'ไพ่แห่งแสงสว่าง',
+                'complete': 'ไพ่แห่งความจริง'
+            };
+
             // Show payment screen
-            document.getElementById('selectedPackageName').textContent = type;
+            document.getElementById('selectedPackageName').textContent = packageNames[type] || type;
             document.getElementById('paymentAmount').textContent = `฿${price}`;
 
             goToScreen('paymentScreen');
