@@ -817,16 +817,6 @@
             <h2 style="text-align: center; margin-bottom: 20px; color: #9b59b6;">เลือกหัวข้อที่คุณต้องการถาม</h2>
 
             <!-- CRO: Urgency Bar -->
-            <div class="urgency-bar">
-                <span>⚡</span>
-                <span>เหลือเพียง <strong id="slots-remaining">7 ช่อง</strong> สำหรับวันนี้!</span>
-            </div>
-
-            <!-- CRO: Promo Timer -->
-            <div class="promo-timer">
-                <span>🎁 โปรโมชั่น 50% OFF สิ้นสุดใน:</span>
-                <span id="countdown-timer" class="countdown">05:47:23</span>
-            </div>
 
             <!-- Clear old session button (only shows if old unpaid session exists) -->
             <div id="clearSessionNotice" style="display: none; background: rgba(231, 76, 60, 0.1); border: 1px solid #e74c3c; border-radius: 10px; padding: 15px; margin-bottom: 20px; text-align: center;">
@@ -995,25 +985,12 @@
                 </div>
             </section>
 
-            <!-- Pricing Tier Banner -->
-            <div id="pricingBanner" style="background: linear-gradient(135deg, #e74c3c, #f39c12); padding: 20px; border-radius: 15px; margin-bottom: 25px; text-align: center; box-shadow: 0 5px 20px rgba(231, 76, 60, 0.4);">
-                <div style="font-size: 24px; font-weight: 700; margin-bottom: 10px;" id="tierLabel">🔥 Loading...</div>
-                <div style="font-size: 18px; margin-bottom: 15px;" id="tierMessage">กำลังโหลดราคาพิเศษ...</div>
-                <div style="background: rgba(0, 0, 0, 0.3); padding: 12px; border-radius: 10px; display: inline-block;">
-                    <div style="font-size: 14px; margin-bottom: 5px; opacity: 0.9;">เหลือเพียง</div>
-                    <div style="font-size: 36px; font-weight: 700;" id="spotsRemaining">-</div>
-                    <div style="font-size: 14px; opacity: 0.9;">ที่นั่งในราคานี้!</div>
-                </div>
-                <div style="margin-top: 15px; font-size: 14px; opacity: 0.9;" id="nextTierInfo">⚡ ราคาจะเพิ่มขึ้นหลังจากนี้</div>
-            </div>
 
             <div class="packages-grid">
                 <div class="package-card" onclick="selectPackageWithPrice('quick', 1, 1, 'basic')">
                     <div class="package-icon">✨</div>
                     <div class="package-title">ไพ่ดวงชะตา</div>
-                    <div style="text-decoration: line-through; color: #999; font-size: 14px; margin-bottom: 5px;">฿99</div>
-                    <div class="package-price" id="price-basic">฿-</div>
-                    <div style="color: #2ecc71; font-weight: 600; font-size: 14px; margin-bottom: 10px;" id="discount-basic">-% OFF</div>
+                    <div class="package-price">฿99</div>
                     <div class="package-features">
                         • ไพ่ 1 ใบ<br>
                         • คำถามติดตาม 1 ข้อ<br>
@@ -1023,9 +1000,7 @@
                 <div class="package-card" onclick="selectPackageWithPrice('deep', 3, 2, 'premium')">
                     <div class="package-icon">🌟</div>
                     <div class="package-title">การอ่านลึกซึ้ง</div>
-                    <div style="text-decoration: line-through; color: #999; font-size: 14px; margin-bottom: 5px;">฿199</div>
-                    <div class="package-price" id="price-premium">฿-</div>
-                    <div style="color: #2ecc71; font-weight: 600; font-size: 14px; margin-bottom: 10px;" id="discount-premium">-% OFF</div>
+                    <div class="package-price">฿199</div>
                     <div class="package-features">
                         • ไพ่ 3 ใบ (อดีต-ปัจจุบัน-อนาคต)<br>
                         • คำถามติดตาม 2 ข้อ<br>
@@ -1036,9 +1011,7 @@
                     <div style="position: absolute; top: -15px; right: 10px; background: linear-gradient(135deg, #f39c12, #e67e22); padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: 600;">⭐ POPULAR</div>
                     <div class="package-icon">⚡</div>
                     <div class="package-title">วิสัยทัศน์สมบูรณ์</div>
-                    <div style="text-decoration: line-through; color: #999; font-size: 14px; margin-bottom: 5px;">฿399</div>
-                    <div class="package-price" id="price-ultimate">฿-</div>
-                    <div style="color: #2ecc71; font-weight: 600; font-size: 14px; margin-bottom: 10px;" id="discount-ultimate">-% OFF</div>
+                    <div class="package-price">฿399</div>
                     <div class="package-features">
                         • ไพ่ 10 ใบ (Celtic Cross)<br>
                         • คำถามติดตาม 3 ข้อ<br>
@@ -1096,17 +1069,6 @@
                         <div class="faq-answer">
                             <p>หลังชำระเงิน 3-5 นาที คุณจะได้รับผลทาง LINE ทันที
                             ถ้ามีคำถามเพิ่มเติม สามารถถามได้เลยผ่าน LINE</p>
-                        </div>
-                    </div>
-
-                    <div class="faq-item">
-                        <button class="faq-question" onclick="toggleFAQ(this)">
-                            <span>ข้อมูลของฉันปลอดภัยไหม?</span>
-                            <span class="faq-icon">+</span>
-                        </button>
-                        <div class="faq-answer">
-                            <p>ปลอดภัย 100%! การทำนายของคุณเป็นความลับ เราไม่เก็บข้อมูลส่วนตัว
-                            และไม่แชร์คำถามหรือผลการทำนายของคุณกับใครทั้งสิ้น</p>
                         </div>
                     </div>
 
@@ -2696,57 +2658,6 @@
             }
         }
 
-        // Countdown Timer (resets daily at midnight)
-        function startCountdown() {
-            const now = new Date();
-            const endTime = new Date();
-            endTime.setHours(23, 59, 59, 999);
-
-            function updateTimer() {
-                const now = new Date();
-                const diff = endTime - now;
-
-                if (diff <= 0) {
-                    location.reload(); // Reload at midnight
-                    return;
-                }
-
-                const hours = Math.floor(diff / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-                const timerEl = document.getElementById('countdown-timer');
-                if (timerEl) {
-                    timerEl.textContent =
-                        `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                }
-            }
-
-            updateTimer();
-            setInterval(updateTimer, 1000);
-        }
-
-        // Random slots remaining (5-12 slots, refreshes daily)
-        function updateSlots() {
-            const today = new Date().toDateString();
-            let slots = localStorage.getItem('slots_' + today);
-
-            if (!slots) {
-                slots = 5 + Math.floor(Math.random() * 8); // 5-12
-                localStorage.setItem('slots_' + today, slots);
-            }
-
-            const slotsEl = document.getElementById('slots-remaining');
-            if (slotsEl) {
-                slotsEl.textContent = slots + ' ช่อง';
-            }
-        }
-
-        // Initialize CRO features on page load (add to existing DOMContentLoaded if exists)
-        window.addEventListener('DOMContentLoaded', () => {
-            startCountdown();
-            updateSlots();
-        });
     </script>
 
 </body>
