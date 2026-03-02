@@ -1298,11 +1298,11 @@
             <div style="text-align: center; margin-bottom: 20px;">
                 <div style="font-size: 14px; color: #ccc; margin-bottom: 10px;">แตะเพื่อให้คะแนน (1-5 ดาว)</div>
                 <div id="starRating" style="font-size: 40px; cursor: pointer; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent;">
-                    <span class="star" data-rating="1" style="color: #666; transition: color 0.2s; padding: 0 2px; display: inline-block; cursor: pointer;">☆</span>
-                    <span class="star" data-rating="2" style="color: #666; transition: color 0.2s; padding: 0 2px; display: inline-block; cursor: pointer;">☆</span>
-                    <span class="star" data-rating="3" style="color: #666; transition: color 0.2s; padding: 0 2px; display: inline-block; cursor: pointer;">☆</span>
-                    <span class="star" data-rating="4" style="color: #666; transition: color 0.2s; padding: 0 2px; display: inline-block; cursor: pointer;">☆</span>
-                    <span class="star" data-rating="5" style="color: #666; transition: color 0.2s; padding: 0 2px; display: inline-block; cursor: pointer;">☆</span>
+                    <span class="star" onclick="setRating(1)" ontouchstart="setRating(1)" data-rating="1" style="color: #666; transition: color 0.2s; padding: 0 5px; display: inline-block; cursor: pointer;">☆</span>
+                    <span class="star" onclick="setRating(2)" ontouchstart="setRating(2)" data-rating="2" style="color: #666; transition: color 0.2s; padding: 0 5px; display: inline-block; cursor: pointer;">☆</span>
+                    <span class="star" onclick="setRating(3)" ontouchstart="setRating(3)" data-rating="3" style="color: #666; transition: color 0.2s; padding: 0 5px; display: inline-block; cursor: pointer;">☆</span>
+                    <span class="star" onclick="setRating(4)" ontouchstart="setRating(4)" data-rating="4" style="color: #666; transition: color 0.2s; padding: 0 5px; display: inline-block; cursor: pointer;">☆</span>
+                    <span class="star" onclick="setRating(5)" ontouchstart="setRating(5)" data-rating="5" style="color: #666; transition: color 0.2s; padding: 0 5px; display: inline-block; cursor: pointer;">☆</span>
                 </div>
                 <div id="ratingText" style="color: #f39c12; margin-top: 10px; font-size: 14px; min-height: 20px;"></div>
             </div>
@@ -2522,73 +2522,26 @@
         // ============ REVIEW SYSTEM ============
         // Note: selectedRating is already declared in global variables section
 
+        // Simple function to set rating (called by inline onclick/ontouchstart)
+        function setRating(rating) {
+            selectedRating = rating;
+            updateStars();
+        }
+
         function showReviewModal() {
             document.getElementById('reviewModal').style.display = 'flex';
 
-            // Set up star rating interactivity (only once)
-            const stars = document.querySelectorAll('.star');
-            const starRating = document.getElementById('starRating');
+            // Reset stars
+            updateStars();
 
-            // Remove old listeners first
-            stars.forEach(star => {
-                const newStar = star.cloneNode(true);
-                star.parentNode.replaceChild(newStar, star);
-            });
-
-            // Add new listeners to fresh stars
-            const freshStars = document.querySelectorAll('.star');
-            freshStars.forEach(star => {
-                // Handle both click (desktop) and touchstart (mobile)
-                const handleSelect = function(e) {
-                    e.preventDefault();
-                    selectedRating = parseInt(this.dataset.rating);
-                    updateStars();
-                };
-
-                star.addEventListener('click', handleSelect);
-                star.addEventListener('touchstart', handleSelect, { passive: false });
-
-                // Desktop hover
-                star.addEventListener('mouseenter', function() {
-                    const hoverRating = parseInt(this.dataset.rating);
-                    updateStars(hoverRating);
+            // Character counter (only add if not already added)
+            const feedbackElement = document.getElementById('reviewFeedback');
+            if (!feedbackElement.hasAttribute('data-listener-added')) {
+                feedbackElement.addEventListener('input', function() {
+                    document.getElementById('feedbackCount').textContent = this.value.length;
                 });
-            });
-
-            // Clone and replace starRating for clean mouseleave
-            const newStarRating = starRating.cloneNode(true);
-            starRating.parentNode.replaceChild(newStarRating, starRating);
-
-            document.getElementById('starRating').addEventListener('mouseleave', function() {
-                updateStars();
-            });
-
-            // Re-attach star listeners after cloning container
-            const reattachStars = document.querySelectorAll('.star');
-            reattachStars.forEach(star => {
-                const handleSelect = function(e) {
-                    e.preventDefault();
-                    selectedRating = parseInt(this.dataset.rating);
-                    updateStars();
-                };
-
-                star.addEventListener('click', handleSelect);
-                star.addEventListener('touchstart', handleSelect, { passive: false });
-
-                star.addEventListener('mouseenter', function() {
-                    const hoverRating = parseInt(this.dataset.rating);
-                    updateStars(hoverRating);
-                });
-            });
-
-            // Character counter
-            const feedbackInput = document.getElementById('reviewFeedback');
-            const newFeedbackInput = feedbackInput.cloneNode(true);
-            feedbackInput.parentNode.replaceChild(newFeedbackInput, feedbackInput);
-
-            document.getElementById('reviewFeedback').addEventListener('input', function() {
-                document.getElementById('feedbackCount').textContent = this.value.length;
-            });
+                feedbackElement.setAttribute('data-listener-added', 'true');
+            }
         }
 
         function closeReviewModal() {
