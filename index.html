@@ -2240,8 +2240,8 @@
             if (navigator.share) {
                 navigator.share({
                     title: '🔮 The Wizard of Destiny Tales',
-                    text: shareText,
-                    url: 'https://wizard-interactive-v2.vercel.app'
+                    text: shareText
+                    // URL already included in shareText - don't pass separately to avoid truncation
                 }).then(() => {
                     console.log('Shared successfully');
                 }).catch((error) => {
