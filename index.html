@@ -457,7 +457,23 @@
         }
 
         .tarot-card.selected {
-            opacity: 0.3;
+            transform-origin: center bottom;
+            animation: pullOut 0.5s ease-out forwards;
+            z-index: 20;
+            border-color: #d4af37;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.8), 0 0 60px rgba(212, 175, 55, 0.4);
+        }
+
+        @keyframes pullOut {
+            0% {
+                transform: var(--original-transform);
+            }
+            50% {
+                transform: var(--original-transform) translateY(-80px) scale(1.15);
+            }
+            100% {
+                transform: var(--original-transform) translateY(-60px) scale(1.1);
+            }
         }
 
         @media (max-width: 768px) {
@@ -1798,6 +1814,8 @@
                 card.style.left = `calc(50% + ${x}px - ${cardWidth}px)`;
                 card.style.top = `${y}px`;
                 card.style.transform = `rotate(${angle}deg)`;
+                // Store original transform for animation
+                card.style.setProperty('--original-transform', `rotate(${angle}deg)`);
 
                 deck.appendChild(card);
             }
